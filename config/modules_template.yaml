@@ -1,0 +1,89 @@
+primary_qc:
+  module_before:
+    none
+  folders:
+    input:
+    output:
+      log_dir:
+        Logs
+      fastqc_dir:
+        fastQC
+      kraken2_dir:
+        kraken2
+      multiqc_dir:
+        multiqc
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: |
+      os.path.basename(sample).split('.')[0]
+    basename: |
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    pair_of_fqs: |
+      f"{sample.replace('_R1.fastq.gz', '').replace('_R1.fq.gz', '')}*"
+    kraken2_report_16S: |
+      f"{folders['kraken2_dir']}{filenames['basename']}_16S.kreport"
+    kraken2_report_fungi: |
+      f"{folders['kraken2_dir']}{filenames['basename']}_fungi.kreport"
+    kraken2_report_human: |
+      f"{folders['kraken2_dir']}{filenames['basename']}_human.kreport"
+
+  commands:
+    before_batch:
+      - kraken2_db_to_RAM
+    sample_level:
+      - kraken2_16S
+      - kraken2_fungi
+      - kraken2_human
+    after_batch:
+      - kraken2_out_of_RAM
+      - multiqc
+
+
+de_novo_assembling:
+  module_before:
+    none
+  folders:
+    input:
+    output:
+      tmp_dir:
+        tmp
+      fasta_dir:
+        fasta
+      quast_dir:
+        quast
+      busco_dir:
+        busco
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: |
+      os.path.basename(sample).split('.')[0]
+    basename: |
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    pair_of_fqs: |
+      [sample, sample.replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
+    spades_fasta: |
+      filenames['filename'].replace('_R1.fastq.gz', '_spades.fasta').replace('_R1.fq.gz', '_spades.fasta')
+    pilon_fasta: |
+      filenames['spades_fasta'].replace('spades', 'pilon')
+    final_fasta: |
+      filenames['pilon_fasta'].replace('_pilon', '')
+
+  commands:
+    before_batch:
+    sample_level:
+      - spades
+      - rename_spades_fasta
+      - pilon
+      - abacas
+      - quast
+      - busco
+    after_batch:
+ 
+  result_dir: >-
+    fasta

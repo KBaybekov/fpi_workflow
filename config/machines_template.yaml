@@ -1,0 +1,7 @@
+dell:
+  envs:
+  binaries:
+    kraken2: "kraken2"
+    fastqc: "fastqc"
+    multiqc: "multiqc"
+  env_command: "conda run -n env binary"

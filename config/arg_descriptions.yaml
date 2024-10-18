@@ -1,0 +1,16 @@
+prolog: "pipeline v0.3"
+epilog: "(c) Kirill Baybekov"
+input_dir: "Папка с исходными файлами"
+output_dir: "Папка для результатов"
+threads: "Количество потоков для анализа (46)"
+ref_fasta: "Путь к референсному файлу FASTA"
+machine: "[dell|personal|z8] Место запуска пайплайна"
+modules: |
+  [primary_qc] Какой модуль запускать (primary_qc). 
+  Возможные значения:
+    - primary_qc: QC FASTQ-файлов (fastqc, kraken2, multiqc)
+exclude_samples: "Образцы для исключения из анализа (разделённые запятой)"
+include_samples: "Образцы для включения в анализ (разделённые запятой)"
+demo: "[yes] Тестовый запуск пайплайна (False)"
+config_path: "Путь для к локальным конфигурациям пайплайна ('config')"
+subfolders: "[True] Поиск файлов в подпапках (False)"

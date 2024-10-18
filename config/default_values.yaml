@@ -1,0 +1,6 @@
+threads: >-
+  46
+ref_fasta: >-
+  '/path/to/reference.fasta'
+modules: >-
+  ['primary_qc', 'de_novo_assembling']
