@@ -4,8 +4,8 @@ primary_qc:
   module_before:
     none
   folders:
-    input:
-    output:
+    input_dir:
+    output_dir:
       log_dir:
         Logs
       fastqc_dir:
