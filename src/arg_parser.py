@@ -6,7 +6,7 @@ def parse_cli_args():
     """
     Функция для обработки аргументов командной строки
     """
-    configs = os.path.dirname(os.path.realpath(__file__))
+    configs = os.path.dirname(os.path.realpath(__file__).replace('src', 'config'))
     arg_descriptions = load_yaml(f'{configs}/arg_descriptions.yaml', critical=True)
         
     parser = argparse.ArgumentParser(
@@ -24,7 +24,7 @@ def parse_cli_args():
     parser.add_argument('-es', '--exclude_samples', default='', help=arg_descriptions['exclude_samples'])
     parser.add_argument('-is', '--include_samples', default='', help=arg_descriptions['include_samples'])
     parser.add_argument('-dm', '--demo', default='', help=arg_descriptions['demo'])
-    parser.add_argument('-cf', '--config_path', default='', help=arg_descriptions['config_path'])
+    parser.add_argument('-pp', '--project_path', default='', type=str, help=arg_descriptions['project_path'])
     parser.add_argument('-s', '--subfolders', default=False, help=arg_descriptions['subfolders'])
 
     # Парсим аргументы
