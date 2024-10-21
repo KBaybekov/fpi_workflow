@@ -24,7 +24,7 @@ primary_qc:
     basename: |
       f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
     pair_of_fqs: |
-      f"{sample.replace('_R1.fastq.gz', '').replace('_R1.fq.gz', '')}*"
+      f"{sample.replace('_1.fastq.gz', '').replace('_1.fq.gz', '')}*"
     kraken2_report_16S: |
       f"{folders['kraken2_dir']}{filenames['basename']}_16S.kreport"
     kraken2_report_fungi: |
