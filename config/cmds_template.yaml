@@ -19,7 +19,7 @@ kraken2_human: |
 fastqc: |
   f'{programms["fastqc"]} --quiet --threads 2 -o {folders["fastqc_dir"]} {filenames["pair_of_fqs"]}'
 kraken2_myco_16S: |
-  f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --minimum-hit-groups 1 --output - --classified-out {filenames["kraken2_out_fq"]}"
+  f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --minimum-hit-groups 1 --output - --classified-out {filenames['kraken2_out_fq']}"
 kraken2_myco: |
   f'{programms["kraken2"]} --db /dev/shm/mycobacteriaceae_tmp --threads {args["threads"]} --paired {filenames["kraken2_out_fq"].replace("#","*")} --report {filenames["kraken2_report_myco"]} --output - --report-minimizer-data'
 
