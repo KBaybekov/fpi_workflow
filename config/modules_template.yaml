@@ -44,6 +44,45 @@ primary_qc:
       - multiqc
 
 
+myco_qc:
+  module_before:
+    none
+  folders:
+    input_dir:
+    output_dir:
+      log_dir:
+        Logs
+      tmp_dir:
+        tmp
+      kraken2_dir:
+        kraken2
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: |
+      os.path.basename(sample).split('.')[0]
+    basename: |
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    pair_of_fqs: |
+      f"{sample.replace('_1.fastq.gz', '').replace('_1.fq.gz', '')}*"
+    kraken2_out_fq: |
+      f"{folders['tmp_dir']}{filenames['basename']}#.fq"
+    kraken2_report_myco: |
+      f"{folders['kraken2_dir']}{filenames['basename']}_myco.kreport"
+
+
+  commands:
+    before_batch:
+      - kraken2_db_to_RAM_myco
+    sample_level:
+      - kraken2_myco_16S
+      - kraken2_myco
+    after_batch:
+      - kraken2_out_of_RAM_myco
+
+
 de_novo_assembling:
   module_before:
     none

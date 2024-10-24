@@ -3,27 +3,40 @@ kraken2_db_to_RAM: |
   cp -r /home/data/REFERENCE_FILES/kraken2/human/ /dev/shm/
   cp -r /home/data/REFERENCE_FILES/kraken2/fungi/ /dev/shm/
   cp -r /home/data/REFERENCE_FILES/kraken2/16S_rdp/ /dev/shm/
+kraken2_db_to_RAM_myco: |
+  cp -r /home/data/REFERENCE_FILES/kraken2/16S_rdp/ /dev/shm/
+  cp -r /home/data/REFERENCE_FILES/kraken2/mycobacteriaceae_tmp/ /dev/shm/
+
 
 #batch
 #qc
 kraken2_16S: |
-  f"{programms['kraken2']} --db /home/data/REFERENCE_FILES/kraken2/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --report {filenames['kraken2_report_16S']} --output - --report-minimizer-data"
+  f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --report {filenames['kraken2_report_16S']} --output - --report-minimizer-data"
 kraken2_fungi: |
-  f'{programms["kraken2"]} --db /home/data/REFERENCE_FILES/kraken2/fungi --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_fungi"]} --output - --report-minimizer-data'
+  f'{programms["kraken2"]} --db /dev/shm/fungi --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_fungi"]} --output - --report-minimizer-data'
 kraken2_human: |
-  f'{programms["kraken2"]} --db /home/data/REFERENCE_FILES/kraken2/human --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_human"]} --output - --report-minimizer-data'
+  f'{programms["kraken2"]} --db /dev/shm/human --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_human"]} --output - --report-minimizer-data'
 fastqc: |
   f'{programms["fastqc"]} --quiet --threads 2 -o {folders["fastqc_dir"]} {filenames["pair_of_fqs"]}'
+kraken2_myco_16S: |
+  f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --minimum-hit-groups 1 --output - --classified-out {filenames["kraken2_out_fq"]}"
+kraken2_myco: |
+  f'{programms["kraken2"]} --db /dev/shm/mycobacteriaceae_tmp --threads {args["threads"]} --paired {filenames["kraken2_out_fq"].replace("#","*")} --report {filenames["kraken2_report_myco"]} --output - --report-minimizer-data'
+
 #de_novo_assembling
 spades: |
   f"spades.py -o {folders['tmp_dir']} -1 {filenames["pair_of_fqs"][0]} -2 {filenames["pair_of_fqs"][1]} -t {threads} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
 rename_spades_fasta: |
   f"mv {folders['tmp_dir']}/contigs.fasta folders['tmp_dir']}/{filenames["spades_fasta"]}"
 
+
 #after batch
+kraken2_out_of_RAM_myco: |
+  rm -rf /dev/shm/16S_rdp/
+  rm -rf /dev/shm/mycobacteriaceae_tmp/
 kraken2_out_of_RAM: |
+  rm -rf /dev/shm/16S_rdp/
   rm -rf /dev/shm/human/
   rm -rf /dev/shm/fungi/
-  rm -rf /dev/shm/16S_rdp/
 multiqc:
   f'{programms["multiqc"]} {folders["output_dir"]} --outdir {folders["multiqc_dir"]} --interactive --export --quiet'
