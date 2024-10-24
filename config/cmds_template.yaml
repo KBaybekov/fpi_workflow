@@ -26,8 +26,11 @@ kraken2_myco: |
 #de_novo_assembling
 spades: |
   f"spades.py -o {folders['tmp_dir']} -1 {filenames["pair_of_fqs"][0]} -2 {filenames["pair_of_fqs"][1]} -t {threads} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
+spades_docker: |
+  f"sudo docker run --priveleged -v {folders['tmp_dir']}:/output -v {os.path.dirname(sample)}:/fq ntm_assembler_aligner /bin/bash -c "cd /programms/SPAdes-4.0.0-Linux/bin/ && ./spades.py -o /output --isolate -1 /fq/{filenames["basename"]}_1.fq.gz -2 /fq/{filenames["basename"]}_2.fq.gz --threads {args["threads"]} -m 100 -k 21,33,55,77""
 rename_spades_fasta: |
   f"mv {folders['tmp_dir']}/contigs.fasta folders['tmp_dir']}/{filenames["spades_fasta"]}"
+
 
 
 #after batch
