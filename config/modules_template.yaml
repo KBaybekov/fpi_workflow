@@ -1,4 +1,4 @@
-sequence: ['primary_qc']
+sequence: ['primary_qc', 'myco_qc']
 
 primary_qc:
   module_before:
