@@ -84,14 +84,15 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                 else:
                     if data[db]:
                         for rank in ['G1', 'S', 'S1']:
-                            if data[db][rank]:
+                            if data[db][rank]['taxas']:
                                 sorted_ratios_myco = sort_species_by_abundance(taxa_data=data[db][rank]['taxas'],
                                                                                total_rank_fragments=data[db][rank]['total'],
                                                                                decontaminated_ratio=decontaminated_ratio)
 
                                 # Выбираем вид с наибольшим количеством ридов (он будет стоять первым)
                                 try:
-                                    main_species = next(iter(sorted_ratios_myco))
+                                    if sorted_ratios_myco:
+                                        main_species = next(iter(sorted_ratios_myco))
                                 except StopIteration:
                                     print(data)
                                     exit()                                            
