@@ -48,6 +48,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
             
             # Отбираем репорты, относящиеся к образцу
             subset_kreports = [k for k in kreports if id in k]
+            print(subset_kreports)
             
             # Итерация по репортам; сначала обрабатываем репорты по контаминации
             for db_type in ['human', 'fungi', 'myco','16S']:
