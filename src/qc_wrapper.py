@@ -91,8 +91,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                                 try:
                                     main_species = next(iter(sorted_ratios_myco))
                                 except StopIteration:
-                                    print(data)
-                                    exit()
+                                    new_row = return_empty_data(row=new_row, rank=rank)
                                             
                                 # Проверяем на условия 95% и 90%
                                 is_95_isolate = sorted_ratios_myco[main_species] > 0.95
@@ -138,6 +137,7 @@ def parse_kreport(file:str, db_type:str, data:dict) -> dict:
                        'quantitative':'percentage'}'''
     # Чтение файла с данными и его форматирование
     df = read_kreport(file=file)
+    print(file, db_type)
     # Обновляем данные о количестве ридов в образце
     if data['total_reads'] == 0:
         data['total_reads'] = df['taxon_fragment'].sum()
@@ -150,7 +150,7 @@ def parse_kreport(file:str, db_type:str, data:dict) -> dict:
     elif db_type == 'myco':
         data[db_type] = get_db_data(df=df, ranks=['G1', 'S', 'S1'])
     else:
-        data[db_type] = get_db_data(df=df, contaminants=True, total_reads=data['total_reads'])
+        data[db_type] = get_db_data(df=df, contaminants=True)
     return data
 
 def read_kreport(file:str) -> pd.DataFrame:
@@ -164,7 +164,7 @@ def read_kreport(file:str) -> pd.DataFrame:
     df['taxonomy'] = df['taxonomy'].str.strip()
     return df
 
-def get_db_data(df:pd.DataFrame, ranks:list=[], contaminants:bool=False, total_reads:int=0) -> dict:
+def get_db_data(df:pd.DataFrame, ranks:list=[], contaminants:bool=False) -> dict:
     db_data = {}
     if contaminants:
         try:
