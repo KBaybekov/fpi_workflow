@@ -48,7 +48,6 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
             
             # Отбираем репорты, относящиеся к образцу
             subset_kreports = [k for k in kreports if id in k]
-            print(subset_kreports)
             
             # Итерация по репортам; сначала обрабатываем репорты по контаминации
             for db_type in ['human', 'fungi', 'myco','16S']:
@@ -57,6 +56,8 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                 # Если элемент найден, удаляем его
                 if index is not None:
                     kr = subset_kreports.pop(index)
+                else:
+                    data[db_type] = {}
                 # Извлекаем данные в виде словаря, обновляя его новыми значениями
                 data = parse_kreport(file=kr, db_type=db_type, data=data)
 
@@ -89,11 +90,8 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                                                                                decontaminated_ratio=decontaminated_ratio)
 
                                 # Выбираем вид с наибольшим количеством ридов (он будет стоять первым)
-                                try:
-                                    main_species = next(iter(sorted_ratios_myco))
-                                except StopIteration:
-                                    new_row = return_empty_data(row=new_row, rank=rank)
-                                            
+                                main_species = next(iter(sorted_ratios_myco))
+                                                                            
                                 # Проверяем на условия 95% и 90%
                                 is_95_isolate = sorted_ratios_myco[main_species] > 0.95
                                 is_90_isolate = sorted_ratios_myco[main_species] >= 0.90
@@ -176,23 +174,22 @@ def get_db_data(df:pd.DataFrame, ranks:list=[], contaminants:bool=False) -> dict
 
     else:
         # Итерируем сбор данных по разным кладам
-        for rank in ranks:
-            db_data[rank] = {}
-            # Определяем, по какому таксономическому рангу будем проводить подсчёт
-            subset_df = df[df['rank'] == rank].reset_index(drop=True)
-            if len(subset_df) != 0:
-                # Подсчитываем общее количество идентифицированных до этого уровня ридов
-                db_data[rank].update({'total': subset_df['taxon_fragment'].sum()})
-                db_data[rank]['taxas'] = {}
-                for row in range(len(subset_df)):
-                    indicator = subset_df.loc[row, 'taxon_fragment']
-                    # Сохраняем данные о количестве ридов в данной кладе, если их больше 0
-                    if indicator != 0:
-                        taxa = subset_df.loc[row, 'taxonomy']
-                        db_data[rank]['taxas'].update({taxa:indicator})
-            else:
-                db_data[rank]['taxas'] = {}
-                db_data[rank]['total'] = 0
+        if len(df) != 0:
+            for rank in ranks:
+                db_data[rank] = {}
+                # Определяем, по какому таксономическому рангу будем проводить подсчёт
+                subset_df = df[df['rank'] == rank].reset_index(drop=True)
+                if len(subset_df) != 0:
+                    # Подсчитываем общее количество идентифицированных до этого уровня ридов
+                    db_data[rank].update({'total': subset_df['taxon_fragment'].sum()})
+                    db_data[rank]['taxas'] = {}
+                    for row in range(len(subset_df)):
+                        indicator = subset_df.loc[row, 'taxon_fragment']
+                        # Сохраняем данные о количестве ридов в данной кладе, если их больше 0
+                        if indicator != 0:
+                            taxa = subset_df.loc[row, 'taxonomy']
+                            db_data[rank]['taxas'].update({taxa:indicator})
+        
 
     
     return db_data
