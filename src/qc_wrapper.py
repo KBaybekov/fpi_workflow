@@ -48,7 +48,6 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
             
             # Отбираем репорты, относящиеся к образцу
             subset_kreports = [k for k in kreports if id in k]
-            print(subset_kreports)
             # Итерация по репортам; сначала обрабатываем репорты по контаминации
             for db_type in ['human', 'fungi', 'myco','16S']:
                 # Находим индекс элемента, содержащего подстроку с указанной БД
@@ -58,10 +57,10 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                     kr = subset_kreports.pop(index)
                 else:
                     data[db_type] = {}
+                    continue
                 # Извлекаем данные в виде словаря, обновляя его новыми значениями
                 data = parse_kreport(file=kr, db_type=db_type, data=data)
 
-            print(data)
             new_row['total_reads'] = data['total_reads']
             # Определяем процент контаминации и коэффициент поправки на неё (чем больше контаминация, тем меньше % составляет выявленный вид от общей массы)
             if isinstance(data['human'], int) and isinstance(data['fungi'], int):
@@ -91,8 +90,11 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                                                                                decontaminated_ratio=decontaminated_ratio)
 
                                 # Выбираем вид с наибольшим количеством ридов (он будет стоять первым)
-                                main_species = next(iter(sorted_ratios_myco))
-                                                                            
+                                try:
+                                    main_species = next(iter(sorted_ratios_myco))
+                                except StopIteration:
+                                    print(data)
+                                    exit()                                            
                                 # Проверяем на условия 95% и 90%
                                 is_95_isolate = sorted_ratios_myco[main_species] > 0.95
                                 is_90_isolate = sorted_ratios_myco[main_species] >= 0.90
