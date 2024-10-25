@@ -48,7 +48,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
             
             # Отбираем репорты, относящиеся к образцу
             subset_kreports = [k for k in kreports if id in k]
-            
+            print(subset_kreports)
             # Итерация по репортам; сначала обрабатываем репорты по контаминации
             for db_type in ['human', 'fungi', 'myco','16S']:
                 # Находим индекс элемента, содержащего подстроку с указанной БД
@@ -61,6 +61,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                 # Извлекаем данные в виде словаря, обновляя его новыми значениями
                 data = parse_kreport(file=kr, db_type=db_type, data=data)
 
+            print(data)
             new_row['total_reads'] = data['total_reads']
             # Определяем процент контаминации и коэффициент поправки на неё (чем больше контаминация, тем меньше % составляет выявленный вид от общей массы)
             if isinstance(data['human'], int) and isinstance(data['fungi'], int):
