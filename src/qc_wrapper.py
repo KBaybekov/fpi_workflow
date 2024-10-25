@@ -185,6 +185,10 @@ def get_db_data(df:pd.DataFrame, ranks:list=[], contaminants:bool=False, total_r
                     if indicator != 0:
                         taxa = subset_df.loc[row, 'taxonomy']
                         db_data[rank]['taxas'].update({taxa:indicator})
+            else:
+                db_data[rank]['taxas'] = {}
+                db_data[rank]['total'] = 0
+
     
     return db_data
 
