@@ -136,7 +136,6 @@ def parse_kreport(file:str, db_type:str, data:dict) -> dict:
                        'quantitative':'percentage'}'''
     # Чтение файла с данными и его форматирование
     df = read_kreport(file=file)
-    print(file, db_type)
     # Обновляем данные о количестве ридов в образце
     if data['total_reads'] == 0:
         data['total_reads'] = df['taxon_fragment'].sum()
