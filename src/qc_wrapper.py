@@ -91,7 +91,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                                 try:
                                     main_species = next(iter(sorted_ratios_myco))
                                 except StopIteration:
-                                    print(sorted_ratios_myco)
+                                    print(data)
                                     exit()
                                             
                                 # Проверяем на условия 95% и 90%
