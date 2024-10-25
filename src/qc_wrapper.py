@@ -178,10 +178,10 @@ def get_db_data(df:pd.DataFrame, ranks:list=[], contaminants:bool=False) -> dict
         # Итерируем сбор данных по разным кладам
         if len(df) != 0:
             for rank in ranks:
-                db_data[rank] = {}
                 # Определяем, по какому таксономическому рангу будем проводить подсчёт
                 subset_df = df[df['rank'] == rank].reset_index(drop=True)
                 if len(subset_df) != 0:
+                    db_data[rank] = {}
                     # Подсчитываем общее количество идентифицированных до этого уровня ридов
                     db_data[rank].update({'total': subset_df['taxon_fragment'].sum()})
                     db_data[rank]['taxas'] = {}
