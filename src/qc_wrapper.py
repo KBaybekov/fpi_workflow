@@ -88,7 +88,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
                                                                                decontaminated_ratio=decontaminated_ratio)
 
                                 # Выбираем вид с наибольшим количеством ридов (он будет стоять первым)
-                                main_species = (next(iter(sorted_ratios_myco)))
+                                main_species = next(iter(sorted_ratios_myco))
                                             
                                 # Проверяем на условия 95% и 90%
                                 is_95_isolate = sorted_ratios_myco[main_species] > 0.95
