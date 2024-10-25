@@ -18,9 +18,9 @@ def read_qc_data(qc_data_file:pd.DataFrame) -> pd.DataFrame:
     if os.path.exists(qc_data_file):
         return pd.read_excel(qc_data_file)
     else:
-        return pd.DataFrame(columns=['id',  'main_species_G1','95%_isolate_G1', '90%_isolate_G1', 'list_G1',
-                                     'main_species_S','95%_isolate_S', '90%_isolate_S', 'list_S',
-                                     'main_species_S1','95%_isolate_S1', '90%_isolate_S1', 'list_S1',
+        return pd.DataFrame(columns=['id',  'main_species_G1', 'main_G1_%', '95%_isolate_G1', '90%_isolate_G1', 'list_G1',
+                                     'main_species_S', 'main_S_%', '95%_isolate_S', '90%_isolate_S', 'list_S',
+                                     'main_species_S1', 'main_S1_%', '95%_isolate_S1', '90%_isolate_S1', 'list_S1',
                                      '16S_list', 'contamination, %', 'total_reads'])
     
 def get_sample_ids(kreports:list) -> list:
@@ -102,6 +102,7 @@ def process_kreports(data_df:pd.DataFrame, sample_ids:list, kreports:list) -> pd
 
                                 # Добавляем данные в строку
                                 new_row[f'main_species_{rank}'] = main_species
+                                new_row[f'main_{rank}_%'] = round((sorted_ratios_myco[main_species]*100), 2)
                                 new_row[f'95%_isolate_{rank}'] = is_95_isolate
                                 new_row[f'90%_isolate_{rank}'] = is_90_isolate
                                 new_row[f'list_{rank}'] = get_list_str(total=data['total_reads'], total_rank=data[db][rank]['total'], data=sorted_ratios_myco)
