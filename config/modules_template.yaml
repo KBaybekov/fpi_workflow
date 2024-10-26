@@ -89,8 +89,8 @@ de_novo_assembling:
   module_before:
     none
   folders:
-    input:
-    output:
+    input_dir:
+    output_dir:
       tmp_dir:
         tmp
       fasta_dir:
@@ -135,8 +135,8 @@ de_novo_assembling_docker:
   module_before:
     none
   folders:
-    input:
-    output:
+    input_dir:
+    output_dir:
       tmp_dir:
         tmp
       fasta_dir:
@@ -177,8 +177,8 @@ qc_assembling_docker:
   module_before:
     de_novo_assembling_docker
   folders:
-    input:
-    output:
+    input_dir:
+    output_dir:
       tmp_dir:
         tmp
       quast_dir:
