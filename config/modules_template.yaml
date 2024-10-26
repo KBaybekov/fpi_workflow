@@ -157,7 +157,7 @@ de_novo_assembling_docker:
     run_id: >-
       filenames['filename'].split('_')[0]
     pair_of_fqs: >-
-      [sample, sample.replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
+      [os.path.basename(sample), os.path.basename(sample).replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
     fasta: >-
       f"{filenames['filename']}.fasta"
   commands:
