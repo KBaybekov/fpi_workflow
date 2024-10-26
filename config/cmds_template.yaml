@@ -33,15 +33,15 @@ spades: >-
   -t {args["threads"]} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
 #4min per 1M reads
 spades_docker: >-
-  f"""docker exec ntm_container /bin/bash -c "{programms['spades']} -o /output --isolate
+  f"""docker exec ntm_container /bin/bash -c "{programms[spades']} -o /output --isolate
   -1 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
   --threads {args["threads"]} -m 100 -k 21,33,55,77""""
 polishing_bwa_docker: >-
-  f"""docker exec ntm_container /bin/bash -c "{programms["bwa_mem2"]} index /tmp/contigs.fasta
+  f"""docker exec ntm_container /bin/bash -c '{programms["bwa_mem2"]} index /tmp/contigs.fasta
   && {programms["bwa_mem2"]} mem -t {args["threads"]} -M /fq/{filenames["run_id"]}/{filenames["basename"]}*.fq.gz
   | samtools view -@ {args["threads"]} -S -b -F 4 -F 8 -F 256 > /tmp/0.bam
   && time samtools sort -@ {args["threads"]} /tmp/0.bam > /tmp/frags.bam
-  && samtools index -@ {args["threads"]} /tmp/frags.bam"""
+  && samtools index -@ {args["threads"]} /tmp/frags.bam'"""
 polishing_pilon_docker: >-
   f"""docker exec ntm_container /bin/bash -c "{programms['pilon']} --threads {args["threads"]} --genome /tmp/contigs.fasta
   --frags /tmp/frags.bam --output {filenames['basename']} --outdir /output/{os.path.basename(os.path.normpath(folders['fasta_dir']))}""""
