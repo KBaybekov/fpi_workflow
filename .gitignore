@@ -162,3 +162,4 @@ tmp/add_kr2_reports.py
 tmp/data/S250006907_1010220056_16S.kreport
 tmp/data/S250006907_1010220056_human.kreport
 tmp/data/S250006907_1010220056_fungi.kreport
+config/t.py
