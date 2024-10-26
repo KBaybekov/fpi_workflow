@@ -1,4 +1,4 @@
-sequence: ['primary_qc', 'myco_qc']
+sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker']
 
 primary_qc:
   module_before:
