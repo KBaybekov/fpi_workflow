@@ -7,29 +7,59 @@ kraken2_db_to_RAM_myco: |
   cp -r /home/data/REFERENCE_FILES/kraken2/16S_rdp/ /dev/shm/
   cp -r /home/data/REFERENCE_FILES/kraken2/mycobacteriaceae_tmp/ /dev/shm/
 
+start_docker_ntm: >-
+  f'docker run --privileged -d --name ntm_container -v {folders["input_dir"]}:/fq -v {folders["output_dir"]}:/output -v {folders["tmp_dir"]}:/tmp/ ntm_assembler_aligner sleep infinity'
+
+
 
 #batch
 #qc
-kraken2_16S: |
+kraken2_16S: >-
   f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --report {filenames['kraken2_report_16S']} --output - --report-minimizer-data"
-kraken2_fungi: |
+kraken2_fungi: >-
   f'{programms["kraken2"]} --db /dev/shm/fungi --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_fungi"]} --output - --report-minimizer-data'
-kraken2_human: |
+kraken2_human: >-
   f'{programms["kraken2"]} --db /dev/shm/human --threads {args["threads"]} --paired {filenames["pair_of_fqs"]} --report {filenames["kraken2_report_human"]} --output - --report-minimizer-data'
-fastqc: |
+fastqc: >-
   f'{programms["fastqc"]} --quiet --threads 2 -o {folders["fastqc_dir"]} {filenames["pair_of_fqs"]}'
-kraken2_myco_16S: |
+kraken2_myco_16S: >-
   f"{programms['kraken2']} --db /dev/shm/16S_rdp --threads {args['threads']} --paired {filenames['pair_of_fqs']} --minimum-hit-groups 1 --output - --classified-out {filenames['kraken2_out_fq']}"
-kraken2_myco: |
+kraken2_myco: >-
   f'{programms["kraken2"]} --db /dev/shm/mycobacteriaceae_tmp --threads {args["threads"]} --paired {filenames["kraken2_out_fq"].replace("#","*")} --report {filenames["kraken2_report_myco"]} --output - --report-minimizer-data'
 
 #de_novo_assembling
-spades: |
-  f"spades.py -o {folders['tmp_dir']} -1 {filenames["pair_of_fqs"][0]} -2 {filenames["pair_of_fqs"][1]} -t {threads} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
-spades_docker: |
-  f"sudo docker run --priveleged -v {folders['tmp_dir']}:/output -v {os.path.dirname(sample)}:/fq ntm_assembler_aligner /bin/bash -c "cd /programms/SPAdes-4.0.0-Linux/bin/ && ./spades.py -o /output --isolate -1 /fq/{filenames["basename"]}_1.fq.gz -2 /fq/{filenames["basename"]}_2.fq.gz --threads {args["threads"]} -m 100 -k 21,33,55,77""
-rename_spades_fasta: |
-  f"mv {folders['tmp_dir']}/contigs.fasta folders['tmp_dir']}/{filenames["spades_fasta"]}"
+spades: >-
+  f"spades.py -o {folders['tmp_dir']} -1 {filenames["pair_of_fqs"][0]} -2 {filenames["pair_of_fqs"][1]}
+  -t {args["threads"]} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
+#4min per 1M reads
+spades_docker: >-
+  f"""docker exec ntm_container /bin/bash -c "programms["spades"]} -o /output --isolate
+  -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  --threads {args["threads"]} -m 100 -k 21,33,55,77""""
+polishing_bwa_docker: >-
+  f"""docker exec ntm_container /bin/bash -c "{programms["bwa_mem2"]} index /tmp/contigs.fasta
+  && {programms["bwa_mem2"]} mem -t {args["threads"]} -M /fq/{filenames["run_id"]}/{filenames["basename"]}*.fq.gz
+  | samtools view -@ {args["threads"]} -S -b -F 4 -F 8 -F 256 > /tmp/0.bam
+  && time samtools sort -@ {args["threads"]} /tmp/0.bam > /tmp/frags.bam
+  && samtools index -@ {args["threads"]} /tmp/frags.bam"""
+polishing_pilon_docker: >-
+  f"""docker exec ntm_container /bin/bash -c "{programms["pilon"]} --threads {args["threads"]} --genome /tmp/contigs.fasta
+  --frags /tmp/frags.bam --output {filenames["basename"]} --outdir /output/{os.path.basename(os.path.normpath('folders['fasta_dir']))}"""
+FIX_polishing_abacas_docker: >-
+  'perl /home/data/Programms/abacas/abacas.1.3.1.pl -r {} -q {} -p nucmer -i 20 -c -o {}{}_abacas'
+quast
+busco_docker: >-
+  f"""docker exec ntm_container /bin/bash -c "{programms["busco"]} -i /output/{os.path.basename(os.path.normpath('folders['fasta_dir']))}/{filenames["fasta"]} --cpu {args["threads"]}
+  --out_path /tmp/ --mode genome --lineage /ref/bacteria_odb10/ --offline --out busco --force""""
+quast_docker: >-
+  f"""docker exec ntm_container /bin/bash -c "{programms["quast"]} --threads {args["threads"]} -o /tmp/quast/ -r {args["ref_fasta"]}
+  /output/{os.path.basename(os.path.normpath('folders['fasta_dir']))}/{filenames["fasta"]}
+  -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats""""
+parse_busco: >-
+    f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}busco.xlsx'
+parse_quast: >-
+    f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}quast.xlsx'
 
 
 
@@ -43,3 +73,6 @@ kraken2_out_of_RAM: |
   rm -rf /dev/shm/fungi/
 multiqc:
   f'{programms["multiqc"]} {folders["output_dir"]} --outdir {folders["multiqc_dir"]} --interactive --export --quiet'
+stop_docker_ntm: |
+  docker container stop ntm_container
+  docker container rm ntm_container

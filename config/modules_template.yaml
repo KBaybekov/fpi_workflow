@@ -21,6 +21,8 @@ primary_qc:
   filenames:
     filename: |
       os.path.basename(sample).split('.')[0]
+    run_id: |
+      f"{filenames['filename'].split('_')[0]}"
     basename: |
       f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
     pair_of_fqs: |
@@ -114,7 +116,6 @@ de_novo_assembling:
       filenames['spades_fasta'].replace('spades', 'pilon')
     final_fasta: |
       filenames['pilon_fasta'].replace('_pilon', '')
-
   commands:
     before_batch:
     sample_level:
@@ -125,6 +126,92 @@ de_novo_assembling:
       - quast
       - busco
     after_batch:
+ 
+  result_dir: >-
+    fasta
+
+
+de_novo_assembling_docker:
+  module_before:
+    none
+  folders:
+    input:
+    output:
+      tmp_dir:
+        tmp
+      fasta_dir:
+        fasta
+      quast_dir:
+        quast
+      busco_dir:
+        busco
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: >-
+      os.path.basename(sample).split('.')[0]
+    basename: >-
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    run_id: >-
+      filenames['filename'].split('_')[0]
+    pair_of_fqs: >-
+      [sample, sample.replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
+    fasta: >-
+      f"{filenames['filename']}.fasta"
+  commands:
+    before_batch:
+     - start_docker_ntm
+    sample_level:
+      - spades_docker
+      - polishing_bwa_docker
+      - polishing_pilon_docker
+    after_batch:
+      - stop_docker_ntm
+ 
+  result_dir: >-
+    fasta
+
+qc_assembling_docker:
+  module_before:
+    de_novo_assembling_docker
+  folders:
+    input:
+    output:
+      tmp_dir:
+        tmp
+      quast_dir:
+        quast
+      busco_dir:
+        busco
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: >-
+      os.path.basename(sample).split('.')[0]
+    basename: >-
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    run_id: >-
+      filenames['filename'].split('_')[0]
+    pair_of_fqs: >-
+      [sample, sample.replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
+    fasta: >-
+      f"{filenames['filename']}.fasta"
+    busco: >-
+      f"{folders['tmp_dir']}busco.json"
+  commands:
+    before_batch:
+     - start_docker_ntm
+    sample_level:
+      - busco_docker
+      - quast_docker
+      - parse_busco
+      - parse_quast
+    after_batch:
+      - stop_docker_ntm
  
   result_dir: >-
     fasta

@@ -1,4 +1,5 @@
 import os
+import pandas as pd
 
 def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
     """
@@ -17,3 +18,17 @@ def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
     if not files:
         raise ValueError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
+
+def read_qc_file(filepath:str, cols:list, file_type:str='xlsx', separator:str=',') -> pd.DataFrame:
+    if file_type == 'xlsx':
+        if os.path.exists(filepath):
+            return pd.read_excel(filepath)
+        else:
+            return pd.DataFrame(columns=cols)
+    elif file_type == 'csv':
+        if os.path.exists(filepath):
+            return pd.read_csv(filepath, sep=separator)
+        else:
+            return pd.DataFrame(columns=cols)
+    else:
+        raise ValueError('Неизвестный тип файла.')

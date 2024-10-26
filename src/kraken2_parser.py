@@ -4,25 +4,16 @@ import sys
 import pandas as pd
 import os
 import warnings
-from utils import get_samples_in_dir_tree
+from utils import read_qc_file, get_samples_in_dir_tree
 
 warnings.filterwarnings("ignore")
 
 def parse_args(args:list):
     if len(args) != 3:
-        print("Использование: qc_wrapper.py qc_directory qc_data.xlsx")
+        print("Использование: kraken2_parser.py qc_directory qc_data.xlsx")
         sys.exit(1)
     return args[1], args[2]
 
-def read_qc_data(qc_data_file:pd.DataFrame) -> pd.DataFrame:
-    if os.path.exists(qc_data_file):
-        return pd.read_excel(qc_data_file)
-    else:
-        return pd.DataFrame(columns=['id',  'main_species_G1', 'main_G1_%', '95%_isolate_G1', '90%_isolate_G1', 'list_G1',
-                                     'main_species_S', 'main_S_%', '95%_isolate_S', '90%_isolate_S', 'list_S',
-                                     'main_species_S1', 'main_S1_%', '95%_isolate_S1', '90%_isolate_S1', 'list_S1',
-                                     '16S_list', 'contamination, %', 'total_reads'])
-    
 def get_sample_ids(kreports:list) -> list:
     sample_ids = []
     for s in kreports:
@@ -220,14 +211,18 @@ def main():
     Основная функция. Читает файл с данными, сравнивает со списком файлов в указанной директории и добавляет новые записи
     """
        
-    qc_dir, qc_data_file = parse_args(sys.argv)
+    qc_dir, qc_filepath = parse_args(sys.argv)
+    kreken2_columns=['id',  'main_species_G1', 'main_G1_%', '95%_isolate_G1', '90%_isolate_G1', 'list_G1',
+                                     'main_species_S', 'main_S_%', '95%_isolate_S', '90%_isolate_S', 'list_S',
+                                     'main_species_S1', 'main_S1_%', '95%_isolate_S1', '90%_isolate_S1', 'list_S1',
+                                     '16S_list', 'contamination, %', 'total_reads']
     # Чтение qc файла
-    data_df = read_qc_data(qc_data_file)
+    data_df = read_qc_file(qc_filepath, cols=kreken2_columns)
     kreports = get_samples_in_dir_tree(dir=qc_dir, extensions=('.kreport'))
     sample_ids = get_sample_ids(kreports)
     print(f'Найдено {len(sample_ids)}')
     data_df = process_kreports(data_df, sample_ids, kreports)
-    data_df.to_excel(qc_data_file, index=False)
+    data_df.to_excel(qc_filepath, index=False)
 
 
 if __name__ == "__main__":
