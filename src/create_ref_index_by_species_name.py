@@ -27,8 +27,12 @@ def index_genomes(path:str, to_index:list) -> None:
                 'meme': 'cd /home/data/Programms/BWA-MEME/ && bwa-meme index -a meme {} -t 48 && build_rmis_dna.sh {}'
                 }
         for title,cmd in cmds.items():
-            #print(cmd.format(filepath))
+            if title == 'meme':
+                filepath = [filepath, filepath]
             result = subprocess.run(cmd.format(filepath), shell=True, capture_output=True, text=True, executable="/bin/bash").returncode
+            if result != 0:
+                print(cmd.format(filepath))
+                exit()
             print(f'\t{title}: {result}')
 
 
