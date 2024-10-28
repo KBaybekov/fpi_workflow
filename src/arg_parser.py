@@ -1,6 +1,6 @@
 import argparse
 import os
-from utils import load_yaml
+from src.utils import load_yaml
 
 def parse_cli_args():
     """
