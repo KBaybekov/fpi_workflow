@@ -1,4 +1,4 @@
-from src.utils import load_yaml,copy_files,get_samples_in_dir
+from utils import load_yaml,copy_files,get_samples_in_dir
 import os
 import sys
 import subprocess
