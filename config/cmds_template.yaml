@@ -32,10 +32,12 @@ spades: >-
   f"spades.py -o {folders['tmp_dir']} -1 {filenames["pair_of_fqs"][0]} -2 {filenames["pair_of_fqs"][1]}
   -t {args["threads"]} --careful -m 100 -k 21,33,55,77 --phred-offset 33"
 #4min per 1M reads
-spades_docker: >-
-  f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --isolate
-  -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
-  --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
+spades_docker:
+  - 600
+  - >-
+    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --isolate
+    -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 polishing_bwa_docker: >-
   f"""docker exec ntm_container /bin/bash -c '{programms["bwa_mem2"]} index /tmp/contigs.fasta
   && {programms["bwa_mem2"]} mem -t {args["threads"]} -M /tmp/contigs.fasta /fq/{filenames["run_id"]}/{filenames["basename"]}*.fq.gz
