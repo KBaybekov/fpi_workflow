@@ -28,8 +28,10 @@ def index_genomes(path:str, to_index:list) -> None:
                 }
         for title,cmd in cmds.items():
             if title == 'meme':
-                filepath = (filepath, filepath)
-            result = subprocess.run(cmd.format(filepath), shell=True, capture_output=True, text=True, executable="/bin/bash").returncode
+                result = subprocess.run(cmd.format(filepath, filepath), shell=True, capture_output=True, text=True, executable="/bin/bash").returncode
+            else:
+                result = subprocess.run(cmd.format(filepath), shell=True, capture_output=True, text=True, executable="/bin/bash").returncode
+
             if result != 0:
                 print(cmd.format(filepath))
                 exit()
