@@ -24,7 +24,7 @@ def index_genomes(path:str, to_index:list) -> None:
         print(genome)
         filepath = os.path.join(path, genome)
         cmds = {'bwa':'bwa index {}',
-                'meme': 'cd /home/data/Programms/BWA-MEME/ && bwa-meme index -a meme {} -t 48 && build_rmis_dna.sh {}'
+                'meme': 'cd /home/data/Programms/BWA-MEME/ && ./bwa-meme index -a meme {} -t 48 && ./build_rmis_dna.sh {}'
                 }
         for title,cmd in cmds.items():
             try:
