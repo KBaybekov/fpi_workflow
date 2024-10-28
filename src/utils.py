@@ -1,6 +1,8 @@
 import os
 import pandas as pd
 import yaml
+import shutil
+import glob
 
 def load_yaml(file_path:str, critical:bool = False, subsection:str = ''):
     """
@@ -75,6 +77,20 @@ def update_yaml(file_path: str, new_data: dict):
     with open(file_path, 'w') as file:
         yaml.dump(current_data, file, default_flow_style=False)
 
+def get_samples_in_dir(dir:str, extensions:tuple):
+    """
+    Генерирует список файлов на основе включающих и исключающих образцов.
+    Выдаёт ошибку, если итоговый список пустой.
+
+    :param dir: Директория, где искать файлы.
+    :param extensions: Расширения файлов для поиска.
+    :return: Список путей к файлам.
+    """
+    # Ищем все файлы в директории с указанными расширениями
+    files = [os.path.join(dir, s) for s in os.listdir(dir) if s.endswith(extensions)]
+    return files
+
+
 def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
     """
     Генерирует список файлов, проходя по дереву папок, корнем которого является dir.
@@ -106,3 +122,36 @@ def read_qc_file(filepath:str, cols:list, file_type:str='xlsx', separator:str=',
             return pd.DataFrame(columns=cols)
     else:
         raise ValueError('Неизвестный тип файла.')
+    
+def copy_files(src_path:str, dest_path:str, to_copy:list, prefix_mask:str='', second_part:str='', third_part:str='', fourth_part:str='',  suffix_mask:str='') -> list:
+    """Копирует файлы из списка; возвращает список файлов, не найденных в папке-источнике. В каком-то из параметров должна быть \
+        указана строка "arg_list": туда будут подставляться элементы списка. \nПодстроки располагаются в следующем порядке:\n
+    {prefix_mask}{second_part}{third_part}{fourth_part}{suffix_mask}
+    
+    :param src_path: Откуда копировать
+    :param dest_path: Куда копировать
+    :param to_copy: Список того, что копируем    
+    """
+    # Список для хранения имён ненайденных файлов
+    not_found = []
+
+    for dir in [src_path, dest_path]:
+        if not os.path.exists(dir):
+            raise OSError(f"Не существует: {dir}")
+    
+    for item in to_copy:
+        # Формируем имя файла
+        file_mask = f"{prefix_mask}{second_part}{third_part}{fourth_part}{suffix_mask}".replace("arg_list", item)
+        src_files = glob.glob(os.path.join(src_path, file_mask))  # Поиск файлов по маске
+        
+        # Проверяем существование файла и копируем, если найден
+        if src_files:
+            for src_file in src_files:
+                dest_file = os.path.join(dest_path, os.path.basename(src_file))
+                shutil.copy(src_file, dest_file)
+                print(f"Копирование {os.path.basename(src_file)} завершено.")
+        else:
+            not_found.append(item)
+            print(f"Файлы по маске {file_mask} не найдены!")
+
+    return not_found

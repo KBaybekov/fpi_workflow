@@ -9,7 +9,7 @@ warnings.filterwarnings("ignore")
 
 def parse_args(args:list):
     if len(args) != 4:
-        print("Использование: busco_parser.py sample_id, busco.json busco_qc_data.xlsx")
+        print("Использование: busco_parser.py sample_id busco.json busco_qc_data.xlsx")
         sys.exit(1)
     return args[1], args[2], args[3]
 
