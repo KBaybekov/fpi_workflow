@@ -36,7 +36,8 @@ def load_yaml(file_path:str, critical:bool = False, subsection:str = ''):
         if critical:
             raise FileNotFoundError(f"Не найден: {file_path}")
         return {}
-    
+
+
 def save_yaml(filename, path, data):
     """
     Сохраняет словарь в файл в формате YAML.
@@ -77,6 +78,7 @@ def update_yaml(file_path: str, new_data: dict):
     with open(file_path, 'w') as file:
         yaml.dump(current_data, file, default_flow_style=False)
 
+
 def get_samples_in_dir(dir:str, extensions:tuple):
     """
     Генерирует список файлов на основе включающих и исключающих образцов.
@@ -109,6 +111,7 @@ def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
         raise ValueError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
 
+
 def read_qc_file(filepath:str, cols:list, file_type:str='xlsx', separator:str=',') -> pd.DataFrame:
     if file_type == 'xlsx':
         if os.path.exists(filepath):
@@ -122,7 +125,8 @@ def read_qc_file(filepath:str, cols:list, file_type:str='xlsx', separator:str=',
             return pd.DataFrame(columns=cols)
     else:
         raise ValueError('Неизвестный тип файла.')
-    
+
+
 def copy_files(src_path:str, dest_path:str, to_copy:list, prefix_mask:str='', second_part:str='', third_part:str='', fourth_part:str='',  suffix_mask:str='') -> list:
     """Копирует файлы из списка; возвращает список файлов, не найденных в папке-источнике. В каком-то из параметров должна быть \
         указана строка "arg_list": туда будут подставляться элементы списка. \nПодстроки располагаются в следующем порядке:\n
@@ -136,6 +140,7 @@ def copy_files(src_path:str, dest_path:str, to_copy:list, prefix_mask:str='', se
     not_found = []
 
     for dir in [src_path, dest_path]:
+        #print(dir)
         if not os.path.exists(dir):
             raise OSError(f"Не существует: {dir}")
     

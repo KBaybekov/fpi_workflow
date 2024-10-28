@@ -41,7 +41,7 @@ def main():
     unindexed_genomes:list
 
     # Папка, откуда тащатся геномы в случае их отсутствия 
-    ncbi_dir = ''
+    ncbi_dir = '/home/data/REFERENCE_FILES/NCBI_datasets/Mycobacteriaceae/fna/'
 
     # Собираем данные о геномах, расположенных в указанной папке
     folder = parse_args(sys.argv)
