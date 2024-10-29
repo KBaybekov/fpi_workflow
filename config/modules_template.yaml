@@ -215,3 +215,47 @@ qc_assembling_docker:
  
   result_dir: >-
     fasta
+
+small_variant_calling_docker:
+  module_before:
+    none
+  folders:
+    input_dir:
+    output_dir:
+      tmp_dir:
+        tmp
+      bam_dir:
+        bam
+      vcf_dir:
+        vcf
+      busco_dir:
+        busco
+  
+  source_extensions:
+    ['1.fastq.gz', '1.fq.gz']
+
+  filenames:
+    filename: >-
+      os.path.basename(sample).split('.')[0]
+    basename: >-
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    run_id: >-
+      filenames['filename'].split('_')[0]
+    pair_of_fqs: >-
+      [os.path.basename(sample), os.path.basename(sample).replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
+    bam: >-
+      f"{filenames['filename']}.bam"
+    vcf: >-
+      f"{filenames['filename']}.vcf"
+  commands:
+    before_batch:
+     - start_docker_ntm
+    sample_level:
+      - bwa_docker
+      - polishing_bwa_docker
+      - polishing_pilon_docker
+    after_batch:
+      - stop_docker_ntm
+ 
+  result_dir: >-
+    fasta

@@ -35,7 +35,7 @@ spades: >-
 spades_docker:
   - 600
   - >-
-    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --isolate
+    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --careful
     -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 polishing_bwa_docker: >-
@@ -58,9 +58,39 @@ quast_docker: >-
   -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
   --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats""""
 parse_busco: >-
-    f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}busco.xlsx'
+  f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}busco.xlsx'
 parse_quast: >-
-    f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}quast.xlsx'
+  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {filenames["busco"]} {folders['tmp_dir']}quast.xlsx'
+
+#vcf_calling
+bwa_docker: >-
+  bwa mem -M -R "@RG\\tID:{filenames["basename"]}\\tLB:{filenames["run_id"]}\\tPL:MGI\\tPM:G50\\tSM:{filenames["basename"]}"
+  {args["refs4ids"][filenames["basename"]]} /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  > /tmp/0.sam
+picard_sort_sam_docker: >-
+  picard-tools SortSam I=/tmp/0.sam O=/tmp/0_sorted.bam SORT_ORDER=coordinate
+picard_mark_duplicates_docker: >-
+  picard-tools MarkDuplicates INPUT=/tmp/0_sorted.bam OUTPUT=/tmp/0_sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt
+picard_build_bam_index_docker: >-
+  picard-tools BuildBamIndex I=/tmp/0_sorted_dedup.bam
+picard_realign_target_docker: >-
+  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T RealignerTargetCreator -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
+  -I /tmp/0_sorted_dedup.bam -o /tmp/0_sorted_dedup_bam_realignment_targets.list --allow_potentially_misencoded_quality_scores
+picard_indel_realigner_docker: >-
+  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T IndelRealigner -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
+  --consensusDeterminationModel USE_READS -I /tmp/0_sorted_dedup.bam -targetIntervals /tmp/0_sorted_dedup_bam_realignment_targets.list
+  -o /tmp/0_sorted_dedup_realigned_reads.bam --allow_potentially_misencoded_quality_scores
+picard_base_recalibrator_docker: >-
+  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T BaseRecalibrator --interval_padding 50 -R {args["refs4ids"][filenames["basename"]]}
+  -rf BadCigar -I /tmp/0_sorted_dedup_realigned_reads.bam -o /tmp/sorted_dedup_realigned_reads.bam_recal_data.table
+picard_pint_reads_docker: >-
+  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T PrintReads -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
+  -BQSR /tmp/sorted_dedup_realigned_reads.bam_recal_data.table -I /tmp/0_sorted_dedup_realigned_reads.bam
+  -o /tmp/sorted_dedup_realigned_reads_recal.bam --allow_potentially_misencoded_quality_scores
+picard_build_bam_index_docker: >-
+  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T HaplotypeCaller -R {args["refs4ids"][filenames["basename"]]} --interval_padding 50
+  -I /tmp/sorted_dedup_realigned_reads_recal.bam -ploidy 1 -o /output/vcf/ploidy.vcf
+
 
 
 

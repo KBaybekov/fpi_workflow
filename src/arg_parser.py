@@ -47,6 +47,15 @@ def parse_cli_args():
     for arg, default_value in default_values.items():
         if getattr(args, arg) == '':
             setattr(args, arg, default_value)
+
+    # Если мы выравниваем NTM на реф геном, то нам нужно заменить в аргументах default ref на ref нужного вида.
+    # Для этого снабжаем пайплайн словарём с указанием id и превалирующего в нём вида
+    if any(['variant_calling' in module for module in args.modules]):
+        ntm_list = load_yaml(file_path=f'{configs}/ntm_list.yaml')
+        ref_list = load_yaml(file_path=f'{configs}/species_ref_genomes.yaml')
+        refs4ids = {key: ref_list[val] for key,val in ntm_list}
+        setattr(args, 'refs4ids', refs4ids)
+
     
     # Преобразуем Namespace в словарь
     args = vars(args)  # Преобразуем объект Namespace в словарь
