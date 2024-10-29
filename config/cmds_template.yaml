@@ -35,7 +35,13 @@ spades: >-
 spades_docker:
   - 600
   - >-
-    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --careful
+    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --isolate
+    -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
+spades_docker_no_isolate:
+  - 600
+  - >-
+    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp
     -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 polishing_bwa_docker: >-
