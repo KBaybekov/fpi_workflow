@@ -1,4 +1,4 @@
-sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_docker']
+sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_ntm_ref_docker']
 
 primary_qc:
   module_before:
@@ -174,7 +174,7 @@ de_novo_assembling_docker:
     fasta
 
 
-qc_assembling_docker:
+qc_assembling_ntm_ref_docker:
   module_before:
     de_novo_assembling_docker
   folders:
