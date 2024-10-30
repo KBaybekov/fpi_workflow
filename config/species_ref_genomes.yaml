@@ -1,30 +1,90 @@
-Mycobacterium_attenuatum: [LAUMK41, GCF_900566085.1]
-Mycobacterium_avium: [ASM2217558v2, GCF_022175585.2]
-Mycobacterium_celatum: [ASM210159v1, GCF_002101595.1]
-Mycobacterium_gordonae: [ASM210167v1, GCF_002101675.1]
-Mycobacterium_intracellulare: [ASM2073600v1, GCF_020736005.1]
-Mycobacterium_kansasii: [ASM15789v2, GCF_000157895.3]
-Mycobacterium_lentiflavum: [PRJEB8430_assembly_1, GCF_022374895.2]
-Mycobacterium_malmoense: [ASM1964585v1, GCF_019645855.1]
-Mycobacterium_marseillense: [ASM228571v1, GCF_002285715.1]
-Mycobacterium_palustre: [ASM210178v1, GCF_002101785.1]
-Mycobacterium_paraffinicum: [ASM2582286v1, GCF_025822865.1]
-Mycobacterium_paragordonae: [ASM361443v1, GCF_003614435.1]
-Mycobacterium_paraintracellulare: [ASM27682v1, GCF_000276825.1]
-Mycobacterium_persicum: [ASM208691v1, GCF_002086915.1]
-Mycobacterium_pseudokansasii: [MK142, GCF_900566075.1]
-Mycobacterium_timonense: [ASM2582198v1, GCF_025821985.1]
-Mycobacterium_xenopi: [53750_B01, GCF_900453395.1]
-Mycobacteroides_abscessus: [ASM6918v1, GCF_000069185.1]
-Mycobacteroides_chelonae: [ASM163280v1, GCF_001632805.1]
-Mycolicibacter_kumamotonensis: [ASM208628v1, GCF_002086285.1]
-Mycolicibacterium_aichiense: [ASM1072624v1, GCF_010726245.1]
-Mycolicibacterium_conceptionense: [ASM210206v1, GCF_002102065.1]
-Mycolicibacterium_fortuitum: [ASM2217954v1, GCF_022179545.1]
-Mycolicibacterium_holsaticum: [ASM1964583v1, GCF_019645835.1]
-Mycolicibacterium_mageritense: [ASM1072747v1, GCF_010727475.1]
-Mycolicibacterium_mucogenicum: [ASM567068v2, GCF_005670685.2]
-Mycolicibacterium_novocastrense: [ASM149983v1, GCF_001499835.1]
-Mycolicibacterium_psychrotolerans: [ASM1072930v1, GCF_010729305.1]
-Mycolicibacterium_septicum: [ASM1691934v1, GCF_016919345.1]
-Mycolicibacterium_wolinskyi: [ASM210196v1, GCF_002101965.1]
+Mycobacterium_attenuatum: 
+  - LAUMK41
+  - GCF_900566085.1
+Mycobacterium_avium: 
+  - ASM2217558v2
+  - GCF_022175585.2
+Mycobacterium_celatum: 
+  - ASM210159v1
+  - GCF_002101595.1
+Mycobacterium_gordonae: 
+  - ASM210167v1
+  - GCF_002101675.1
+Mycobacterium_intracellulare: 
+  - ASM2073600v1
+  - GCF_020736005.1
+Mycobacterium_kansasii: 
+  - ASM15789v2
+  - GCF_000157895.3
+Mycobacterium_lentiflavum: 
+  - PRJEB8430_assembly_1
+  - GCF_022374895.2
+Mycobacterium_malmoense: 
+  - ASM1964585v1
+  - GCF_019645855.1
+Mycobacterium_marseillense: 
+  - ASM228571v1
+  - GCF_002285715.1
+Mycobacterium_palustre: 
+  - ASM210178v1
+  - GCF_002101785.1
+Mycobacterium_paraffinicum: 
+  - ASM2582286v1
+  - GCF_025822865.1
+Mycobacterium_paragordonae: 
+  - ASM361443v1
+  - GCF_003614435.1
+Mycobacterium_paraintracellulare: 
+  - ASM27682v1
+  - GCF_000276825.1
+Mycobacterium_persicum: 
+  - ASM208691v1
+  - GCF_002086915.1
+Mycobacterium_pseudokansasii: 
+  - MK142
+  - GCF_900566075.1
+Mycobacterium_timonense: 
+  - ASM2582198v1
+  - GCF_025821985.1
+Mycobacterium_xenopi: 
+  - 53750_B01
+  - GCF_900453395.1
+Mycobacteroides_abscessus: 
+  - ASM6918v1
+  - GCF_000069185.1
+Mycobacteroides_chelonae: 
+  - ASM163280v1
+  - GCF_001632805.1
+Mycolicibacter_kumamotonensis: 
+  - ASM208628v1
+  - GCF_002086285.1
+Mycolicibacterium_aichiense: 
+  - ASM1072624v1
+  - GCF_010726245.1
+Mycolicibacterium_conceptionense: 
+  - ASM210206v1
+  - GCF_002102065.1
+Mycolicibacterium_fortuitum: 
+  - ASM2217954v1
+  - GCF_022179545.1
+Mycolicibacterium_holsaticum: 
+  - ASM1964583v1
+  - GCF_019645835.1
+Mycolicibacterium_mageritense: 
+  - ASM1072747v1
+  - GCF_010727475.1
+Mycolicibacterium_mucogenicum: 
+  - ASM567068v2
+  - GCF_005670685.2
+Mycolicibacterium_novocastrense: 
+  - ASM149983v1
+  - GCF_001499835.1
+Mycolicibacterium_psychrotolerans: 
+  - ASM1072930v1
+  - GCF_010729305.1
+Mycolicibacterium_septicum: 
+  - ASM1691934v1
+  - GCF_016919345.1
+Mycolicibacterium_wolinskyi: 
+  - ASM210196v1
+  - GCF_002101965.1
