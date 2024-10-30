@@ -12,7 +12,7 @@ def parse_args(args:list):
         sys.exit(1)
     return args[1], args[2], args[3]
 
-def get_quast_data(quast_report:str, species:str, id:str, quast_cols:list) -> dict:
+def get_quast_data(quast_report:str, species:str, id:str, cols:list) -> dict:
     quast_data = pd.read_csv(quast_report, sep='\t')
     new_row = {'id':id, 'Species':species}
     for col in quast_cols:
