@@ -61,8 +61,8 @@ FIX_polishing_abacas_docker: >-
   'perl /home/data/Programms/abacas/abacas.1.3.1.pl -r {} -q {} -p nucmer -i 20 -c -o {}{}_abacas'
 #qc_assembling_docker
 busco_docker: >-
-  f"""docker exec ntm_container /bin/bash -c "{programms['busco']} -i /input/{filenames['fasta']} --cpu {args['threads']}
-  --out_path /tmp/ --mode genome --lineage /ref/bacteria_odb10/ --offline --out busco --force""""
+  f"""docker exec ntm_container /bin/bash -c '{programms['busco']} -i /input/{filenames['fasta']} --cpu {args['threads']}
+  --out_path /tmp/ --mode genome --lineage /ref/bacteria_odb10/ --offline --out busco --force'"""
 quast_docker: >-
   f"""docker exec ntm_container /bin/bash -c "{programms['quast']} --threads {args['threads']} -o /tmp/quast/ -r /ref/bwa/{args['refs4ids'][filenames["basename"]]}*.fna
   /input/{filenames['fasta']}
