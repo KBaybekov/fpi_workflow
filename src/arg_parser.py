@@ -26,6 +26,7 @@ def parse_cli_args():
     parser.add_argument('-db', '--debug', default=False, help=arg_descriptions['debug'])
     parser.add_argument('-pp', '--project_path', default='', type=str, help=arg_descriptions['project_path'])
     parser.add_argument('-s', '--subfolders', default=False, help=arg_descriptions['subfolders'])
+    parser.add_argument('-rd', '--ref_dir', default="", help=arg_descriptions['ref_dir'])
 
     # Парсим аргументы
     args = parser.parse_args()

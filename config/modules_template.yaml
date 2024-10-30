@@ -1,4 +1,4 @@
-sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker']
+sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_docker']
 
 primary_qc:
   module_before:
@@ -173,6 +173,7 @@ de_novo_assembling_docker:
   result_dir: >-
     fasta
 
+
 qc_assembling_docker:
   module_before:
     de_novo_assembling_docker
@@ -181,13 +182,9 @@ qc_assembling_docker:
     output_dir:
       tmp_dir:
         tmp
-      quast_dir:
-        quast
-      busco_dir:
-        busco
   
   source_extensions:
-    ['1.fastq.gz', '1.fq.gz']
+    ['.fasta']
 
   filenames:
     filename: >-
@@ -197,9 +194,7 @@ qc_assembling_docker:
     run_id: >-
       filenames['filename'].split('_')[0]
     pair_of_fqs: >-
-      [sample, sample.replace('_1.fastq.gz', '_2.fastq.gz').replace('_1.fq.gz', '_2.fq.gz')]
-    fasta: >-
-      f"{filenames['filename']}.fasta"
+      [f'{filenames['basename']}_1.fq.gz', f'{filenames['basename']}_2.fq.gz']
     busco: >-
       f"{folders['tmp_dir']}busco.json"
   commands:
@@ -207,14 +202,16 @@ qc_assembling_docker:
      - start_docker_ntm
     sample_level:
       - busco_docker
-      - quast_docker
       - parse_busco
+      - quast_docker
       - parse_quast
+      - rm_tmp_files_docker
     after_batch:
       - stop_docker_ntm
  
   result_dir: >-
-    fasta
+    No
+
 
 small_variant_calling_docker:
   module_before:

@@ -4,3 +4,5 @@ ref_fasta: >-
   '/path/to/reference.fasta'
 modules: >-
   ['primary_qc', 'de_novo_assembling']
+ref_dir: >-
+  /storeData/ztron/rawdata/ref_ntm/
