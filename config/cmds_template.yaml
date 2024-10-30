@@ -61,11 +61,11 @@ FIX_polishing_abacas_docker: >-
   'perl /home/data/Programms/abacas/abacas.1.3.1.pl -r {} -q {} -p nucmer -i 20 -c -o {}{}_abacas'
 #qc_assembling_docker
 busco_docker: >-
-  f"""docker exec ntm_container /bin/bash -c "{programms['busco']} -i /output/{f""os.path.basename(os.path.normpath(folders['fasta_dir']))}/{filenames['fasta']""} --cpu {args['threads']}
+  f"""docker exec ntm_container /bin/bash -c "{programms['busco']} -i /input/{filenames['fasta']} --cpu {args['threads']}
   --out_path /tmp/ --mode genome --lineage /ref/bacteria_odb10/ --offline --out busco --force""""
 quast_docker: >-
   f"""docker exec ntm_container /bin/bash -c "{programms['quast']} --threads {args['threads']} -o /tmp/quast/ -r /ref/bwa/{args['refs4ids'][filenames["basename"]]}*.fna
-  /output/{os.path.basename(os.path.normpath(folders['fasta_dir']))}/{filenames['fasta']}
+  /input/{filenames['fasta']}
   -1 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
   --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats""""
 parse_busco: >-
