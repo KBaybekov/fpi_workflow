@@ -65,7 +65,7 @@ busco_docker: >-
   f"""docker exec ntm_container /bin/bash -c '{programms['busco']} -i /input/{f"{filenames['filename']}.fasta"} --cpu {args['threads']}
   --out_path /tmp/ --mode genome --lineage /ref/bacteria_odb10/ --offline --out busco --force'"""
 quast_docker: >-
-  f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/quast/ -r /ref/bwa/{args['refs4ids'][filenames["basename"]][0]}*.fna
+  f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
   /input/{f"{filenames['filename']}.fasta"}
   -1 /input/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
   --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
