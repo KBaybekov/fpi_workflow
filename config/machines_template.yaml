@@ -16,4 +16,4 @@ z8:
     bwa_mem2: "/programms/bwa-mem2-2.2.1_x64-linux/bwa-mem2"
     spades: "cd /programms/SPAdes-4.0.0-Linux/bin/ && ./spades.py"
     quast: "quast.py"
-  env_command: "source activate env && binary"
+  env_command: "/root/miniconda3/bin/conda run -n env binary"
