@@ -72,7 +72,7 @@ quast_docker: >-
 parse_busco: >-
   f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['output_dir']}busco.xlsx'
 parse_quast: >-
-  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {filenames["busco"]} {folders['output_dir']}quast.xlsx'
+  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {filenames["quast"]} {folders['output_dir']}quast.xlsx'
 
 #vcf_calling
 bwa_docker: >-
