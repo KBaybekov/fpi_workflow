@@ -8,7 +8,7 @@ warnings.filterwarnings("ignore")
 
 def parse_args(args:list):
     if len(args) != 5:
-        print("Использование: quast_parser.py sample_id species busco.json busco_qc_data.xlsx")
+        print("Использование: quast_parser.py sample_id species quast_report busco_qc_data.xlsx")
         sys.exit(1)
     return args[1], args[2], args[3], args[4]
 
