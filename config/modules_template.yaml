@@ -164,7 +164,7 @@ de_novo_assembling_docker:
     before_batch:
      - start_docker_ntm
     sample_level:
-      - spades_docker_no_isolate
+      - spades_docker_meta
       - polishing_bwa_docker
       - polishing_pilon_docker
     after_batch:
