@@ -7,7 +7,7 @@ kraken2_db_to_RAM_myco: |
   cp -r /home/data/REFERENCE_FILES/kraken2/16S_rdp/ /dev/shm/
   cp -r /home/data/REFERENCE_FILES/kraken2/mycobacteriaceae_tmp/ /dev/shm/
 start_docker_ntm: >-
-  f'docker run --privileged -d --name ntm_container -v {args["ref_dir"]}:/ref -v {folders["input_dir"]}:/fq -v {folders["output_dir"]}:/output -v {folders["tmp_dir"]}:/tmp/ ntm_assembler_aligner sleep infinity'
+  f'docker run --privileged -d --name ntm_container -v {args["ref_dir"]}:/ref -v {folders["input_dir"]}:/input -v {folders["output_dir"]}:/output -v {folders["tmp_dir"]}:/tmp/ ntm_assembler_aligner sleep infinity'
 
 #batch
 #qc
@@ -34,23 +34,23 @@ spades_docker:
   - 600
   - >-
     f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --isolate
-    -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    -1 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 spades_docker_no_isolate:
   - 600
   - >-
     f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp
-    -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    -1 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 spades_docker_meta:
   - 600
   - >-
     f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp --meta
-    -1 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    -1 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 polishing_bwa_docker: >-
   f"""docker exec ntm_container /bin/bash -c '{programms["bwa_mem2"]} index /tmp/contigs.fasta
-  && {programms["bwa_mem2"]} mem -t {args["threads"]} -M /tmp/contigs.fasta /fq/{filenames["run_id"]}/{filenames["basename"]}*.fq.gz
+  && {programms["bwa_mem2"]} mem -t {args["threads"]} -M /tmp/contigs.fasta /input/{filenames["run_id"]}/{filenames["basename"]}*.fq.gz
   | samtools view -@ {args["threads"]} -S -b -F 4 -F 8 -F 256 > /tmp/0.bam
   && time samtools sort -@ {args["threads"]} /tmp/0.bam > /tmp/frags.bam
   && samtools index -@ {args["threads"]} /tmp/frags.bam'"""
@@ -66,7 +66,7 @@ busco_docker: >-
 quast_docker: >-
   f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/quast/ -r /ref/bwa/{args['refs4ids'][filenames["basename"]]}*.fna
   /input/{f"{filenames['filename']}.fasta"}
-  -1 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
+  -1 /input/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
   --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
 parse_busco: >-
   f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['output_dir']}busco.xlsx'
@@ -76,7 +76,7 @@ parse_quast: >-
 #vcf_calling
 bwa_docker: >-
   bwa mem -M -R "@RG\\tID:{filenames["basename"]}\\tLB:{filenames["run_id"]}\\tPL:MGI\\tPM:G50\\tSM:{filenames["basename"]}"
-  {args["refs4ids"][filenames["basename"]]} /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} /fq/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  {args["refs4ids"][filenames["basename"]]} /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
   > /tmp/0.sam
 picard_sort_sam_docker: >-
   picard-tools SortSam I=/tmp/0.sam O=/tmp/0_sorted.bam SORT_ORDER=coordinate
