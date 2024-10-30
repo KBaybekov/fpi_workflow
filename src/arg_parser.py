@@ -54,7 +54,7 @@ def parse_cli_args():
     if any(['ntm_ref' in module for module in args.modules]):
         ntm_list = load_yaml(file_path=f'{configs}/ntm_list.yaml')
         ref_list = load_yaml(file_path=f'{configs}/species_ref_genomes.yaml')
-        refs4ids = {key: ref_list[val] for key,val in ntm_list}
+        refs4ids = {key: ref_list[val] for key,val in ntm_list.items()}
         setattr(args, 'refs4ids', refs4ids)
 
     
