@@ -33,7 +33,7 @@ def main():
     df:pd.DataFrame
 
     id, species, quast_report, qc_data_file = parse_args(sys.argv)
-    quast_cols = ['SRR', 'Species', 'Reference mapped (%)', 'Reference properly paired (%)', '# contigs',  'Largest contig', 'Reference length', \
+    quast_cols = ['id', 'Species', 'Reference mapped (%)', 'Reference properly paired (%)', '# contigs',  'Largest contig', 'Reference length', \
               'Total aligned length', 'Unaligned length', 'Total length', 'Duplication ratio', 'GC (%)', 'Reference GC (%)', \
               'Genome fraction (%)', 'N50', 'NG50', 'N90', 'NG90', 'auN', 'auNG', 'L50', 'LG50', 'L90', 'LG90', 'NA50', \
               'NGA50', 'NA90', 'NGA90', 'auNA', 'auNGA', 'LA50', 'LGA50', 'LA90', 'LGA90', \

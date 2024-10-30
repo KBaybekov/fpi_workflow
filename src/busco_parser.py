@@ -28,7 +28,7 @@ def main():
     df:pd.DataFrame
 
     id, busco_report, qc_data_file = parse_args(sys.argv)
-    busco_cols = ["Complete percentage","Complete BUSCOs",\
+    busco_cols = ['id',"Complete percentage","Complete BUSCOs",\
               "Single copy percentage","Single copy BUSCOs",\
               "Multi copy percentage","Multi copy BUSCOs",\
               "Fragmented percentage","Fragmented BUSCOs",\
