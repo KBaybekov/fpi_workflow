@@ -196,7 +196,7 @@ qc_assembling_ntm_ref_docker:
     pair_of_fqs: >-
       [f'{filenames['basename']}_1.fq.gz', f'{filenames['basename']}_2.fq.gz']
     busco: >-
-      f"{folders['tmp_dir']}busco.json"
+      f"{folders['tmp_dir']}/busco/*busco.json"
   commands:
     before_batch:
      - start_docker_ntm
