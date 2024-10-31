@@ -250,6 +250,7 @@ small_variant_calling_ntm_ref:
       f"{filenames['filename']}.vcf"
   commands:
     before_batch:
+      - mkdir_tmp
     sample_level:
       - bwa
       - gatk_sort_sam
