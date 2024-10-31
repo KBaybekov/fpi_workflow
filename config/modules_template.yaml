@@ -231,8 +231,6 @@ small_variant_calling:
         bam
       vcf_dir:
         vcf
-      busco_dir:
-        busco
   
   source_extensions:
     ['1.fastq.gz', '1.fq.gz']
