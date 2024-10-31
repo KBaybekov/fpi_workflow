@@ -175,6 +175,7 @@ de_novo_assembling_docker:
 
 
 qc_assembling_ntm_ref_docker:
+  timeout_behavior: next
   module_before:
     de_novo_assembling_docker
   folders:
