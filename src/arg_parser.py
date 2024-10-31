@@ -23,7 +23,7 @@ def parse_cli_args():
     parser.add_argument('-m', '--modules', default='', help=arg_descriptions['modules'])
     parser.add_argument('-es', '--exclude_samples', default='', help=arg_descriptions['exclude_samples'])
     parser.add_argument('-is', '--include_samples', default='', help=arg_descriptions['include_samples'])
-    parser.add_argument('-db', '--debug', default=[], help=arg_descriptions['debug'])
+    parser.add_argument('-db', '--debug', default='', help=arg_descriptions['debug'])
     parser.add_argument('-pp', '--project_path', default='', type=str, help=arg_descriptions['project_path'])
     parser.add_argument('-s', '--subfolders', default=False, help=arg_descriptions['subfolders'])
     parser.add_argument('-rd', '--ref_dir', default="", help=arg_descriptions['ref_dir'])
