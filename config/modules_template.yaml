@@ -205,8 +205,8 @@ qc_assembling_ntm_ref_docker:
      - start_docker_ntm
      #- create_chmod_loop_quast
     sample_level:
-      #- busco_docker
-      #- parse_busco
+      - busco_docker
+      - parse_busco
       - quast_docker_0
       - quast_chown
       - quast_docker
@@ -219,7 +219,7 @@ qc_assembling_ntm_ref_docker:
     No
 
 
-small_variant_calling_docker:
+small_variant_calling:
   module_before:
     none
   folders:
@@ -252,13 +252,16 @@ small_variant_calling_docker:
       f"{filenames['filename']}.vcf"
   commands:
     before_batch:
-     - start_docker_ntm
     sample_level:
-      - bwa_docker
-      - polishing_bwa_docker
-      - polishing_pilon_docker
+      - bwa
+      - gatk_sort_sam
+      - gatk_mark_duplicates
+      - gatk_build_bam_index
+      - gatk_realign_target
+      - gatk_print_reads
+      - gatk_build_bam_index
+      - rm_tmp_files
     after_batch:
-      - stop_docker_ntm
  
   result_dir: >-
     fasta

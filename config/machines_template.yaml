@@ -1,11 +1,15 @@
 dell:
   envs:
+    gatk: gatk
   binaries:
-    kraken2: "kraken2"
-    fastqc: "fastqc"
-    multiqc: "multiqc"
-    quast: "/home/data/Programms/quast-5.2.0/quast.py"
-  env_command: "conda run -n env binary"
+    kraken2: kraken2
+    fastqc: fastqc
+    gatk: gatk
+    multiqc: multiqc
+    picard: java -jar picard.jar
+    quast: /home/data/Programms/quast-5.2.0/quast.py
+    meme: /home/data/Programms/BWA-MEME/bwa-meme mem
+  env_command: conda run -n env binary
 
 z8:
   envs:

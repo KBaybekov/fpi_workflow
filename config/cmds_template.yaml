@@ -101,28 +101,52 @@ bwa_docker: >-
 picard_sort_sam_docker: >-
   picard-tools SortSam I=/tmp/0.sam O=/tmp/0_sorted.bam SORT_ORDER=coordinate
 picard_mark_duplicates_docker: >-
-  picard-tools MarkDuplicates INPUT=/tmp/0_sorted.bam OUTPUT=/tmp/0_sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt
+  picard-tools MarkDuplicates INPUT=/tmp/0_sorted.bam OUTPUT=/tmp/sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt
 picard_build_bam_index_docker: >-
-  picard-tools BuildBamIndex I=/tmp/0_sorted_dedup.bam
+  picard-tools BuildBamIndex I=/tmp/sorted_dedup.bam
 picard_realign_target_docker: >-
   java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T RealignerTargetCreator -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
-  -I /tmp/0_sorted_dedup.bam -o /tmp/0_sorted_dedup_bam_realignment_targets.list --allow_potentially_misencoded_quality_scores
+  -I /tmp/sorted_dedup.bam -o /tmp/sorted_dedup_bam_realignment_targets.list --allow_potentially_misencoded_quality_scores
 picard_indel_realigner_docker: >-
   java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T IndelRealigner -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
-  --consensusDeterminationModel USE_READS -I /tmp/0_sorted_dedup.bam -targetIntervals /tmp/0_sorted_dedup_bam_realignment_targets.list
-  -o /tmp/0_sorted_dedup_realigned_reads.bam --allow_potentially_misencoded_quality_scores
+  --consensusDeterminationModel USE_READS -I /tmp/sorted_dedup.bam -targetIntervals /tmp/sorted_dedup_bam_realignment_targets.list
+  -o /tmp/sorted_dedup_reads.bam --allow_potentially_misencoded_quality_scores
 picard_base_recalibrator_docker: >-
   java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T BaseRecalibrator --interval_padding 50 -R {args["refs4ids"][filenames["basename"]]}
-  -rf BadCigar -I /tmp/0_sorted_dedup_realigned_reads.bam -o /tmp/sorted_dedup_realigned_reads.bam_recal_data.table
+  -rf BadCigar -I /tmp/sorted_dedup_reads.bam -o /tmp/sorted_dedup_reads.bam_recal_data.table
 picard_pint_reads_docker: >-
   java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T PrintReads -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
-  -BQSR /tmp/sorted_dedup_realigned_reads.bam_recal_data.table -I /tmp/0_sorted_dedup_realigned_reads.bam
+  -BQSR /tmp/sorted_dedup_reads.bam_recal_data.table -I /tmp/sorted_dedup_reads.bam
   -o /tmp/sorted_dedup_realigned_reads_recal.bam --allow_potentially_misencoded_quality_scores
 picard_build_bam_index_docker: >-
   java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T HaplotypeCaller -R {args["refs4ids"][filenames["basename"]]} --interval_padding 50
   -I /tmp/sorted_dedup_realigned_reads_recal.bam -ploidy 1 -o /output/vcf/ploidy.vcf
 rm_tmp_files_docker: >-
   docker exec ntm_container /bin/bash -c "rm -rf /tmp/*"
+#same, no docker
+bwa: >-
+  {programms['meme']} --threads {args["threads"]} -M -R "@RG ID:{filenames["basename"]}      LB:{filenames["run_id"]}        PL:MGI  PM:G50  SM:{filenames["basename"]}"
+  {args["refs4ids"][filenames["basename"]]} {folders["input_dir"}]{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} {folders["input_dir"}]{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  > {folders["tmp_dir"}0.sam
+gatk_sort_sam: >-
+  {programms['gatk']} SortSamSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"}0.sam O={folders["tmp_dir"}0_sorted.bam SORT_ORDER=coordinate
+gatk_mark_duplicates: >-
+  {programms['gatk']} MarkDuplicatesSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"}0_sorted.bam O={folders["tmp_dir"}sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt
+gatk_build_bam_index: >-
+  {programms['gatk']} BuildBamIndex I={folders["tmp_dir"}sorted_dedup.bam
+gatk_base_recalibrator: >-
+  {programms['gatk']} -T BaseRecalibratorSpark --spark-master local[{args["threads"]}] --interval_padding 50 -R {args["refs4ids"][filenames["basename"]]}
+  -rf BadCigar -I {folders["tmp_dir"}sorted_dedup.bam -o {folders["tmp_dir"}sorted_dedup_reads.bam_recal_data.table
+gatk_print_reads: >-
+  {programms['gatk']} -T PrintReadsSpark --spark-master local[{args["threads"]}] -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
+  -BQSR {folders["tmp_dir"}sorted_dedup_reads.bam_recal_data.table -I {folders["tmp_dir"}sorted_dedup_reads.bam
+  -o {folders["bam_dir"}]{filenames["basename"]}.bam --allow_potentially_misencoded_quality_scores
+gatk_build_bam_index: >-
+  {programms['gatk']} -T HaplotypeCallerSpark --spark-master local[{args["threads"]}] -R {args["refs4ids"][filenames["basename"]]} --interval_padding 50
+  -I {folders["bam_dir"}]{filenames["basename"]}.bam -ploidy 1 -o {folders["vcf_dir"}{folders["tmp_dir"}{filenames["basename"]}_ploidy.vcf
+rm_tmp_files: >-
+  rm -rf {folders["tmp_dir"}*
+
 
 #after batch
 kraken2_out_of_RAM_myco: |
