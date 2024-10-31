@@ -11,7 +11,7 @@ modules: |
     - primary_qc: QC FASTQ-файлов (fastqc, kraken2, multiqc)
 exclude_samples: "Образцы для исключения из анализа (разделённые запятой)"
 include_samples: "Образцы для включения в анализ (разделённые запятой)"
-debug: "[True] Тестовый запуск пайплайна (False)"
+debug: "Уровень дебага (all, cmd_tpl, samples, cmds, errors, info)"
 project_path: "Путь к локальной конфигурации проекта"
 subfolders: "[True] Поиск файлов в подпапках (False)"
 ref_dir: "Директория с референсными файлами"
