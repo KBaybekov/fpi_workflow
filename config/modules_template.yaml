@@ -203,8 +203,8 @@ qc_assembling_ntm_ref_docker:
     before_batch:
      - start_docker_ntm
     sample_level:
-      - busco_docker
-      - parse_busco
+      #- busco_docker
+      #- parse_busco
       - quast_docker
       - parse_quast
       - rm_tmp_files_docker
