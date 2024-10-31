@@ -43,6 +43,12 @@ spades_docker_no_isolate:
     f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp
     -1 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} -2 /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
     --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
+spades_docker_no_isolate_unpaired_r2_only:
+  - 600
+  - >-
+    f"""docker exec ntm_container /bin/bash -c '{programms["spades"]} -o /tmp
+    -s /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+    --threads {args["threads"]} -m 100 -k 21,33,55,77'"""
 spades_docker_meta:
   - 600
   - >-
