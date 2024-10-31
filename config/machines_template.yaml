@@ -9,7 +9,7 @@ dell:
     picard: java -jar picard.jar
     quast: /home/data/Programms/quast-5.2.0/quast.py
     meme: /home/data/Programms/BWA-MEME/bwa-meme mem
-  env_command: conda run -n env binary
+  env_command: /usr/local/bin/anaconda3/bin/conda run -n env binary
 
 z8:
   envs:
