@@ -139,15 +139,15 @@ gatk_mark_duplicates: >-
 gatk_build_bam_index: >-
   f"""{programms['gatk']} BuildBamIndex -I {folders["tmp_dir"]}sorted_dedup.bam"""
 gatk_base_recalibrator: >-
-  f"""{programms['gatk']} -T BaseRecalibratorSpark --spark-master local[{args["threads"]}] --interval_padding 50
+  f"""{programms['gatk']} BaseRecalibratorSpark --spark-master local[{args["threads"]}] --interval_padding 50
   -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna
   -rf BadCigar -I {folders["tmp_dir"]}sorted_dedup.bam -o {folders["tmp_dir"]}sorted_dedup_reads.bam_recal_data.table"""
 gatk_print_reads: >-
-  f"""{programms['gatk']} -T PrintReadsSpark --spark-master local[{args["threads"]}] -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna -rf BadCigar
+  f"""{programms['gatk']} PrintReadsSpark --spark-master local[{args["threads"]}] -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna -rf BadCigar
   -BQSR {folders["tmp_dir"]}sorted_dedup_reads.bam_recal_data.table -I {folders["tmp_dir"]}sorted_dedup_reads.bam
   -o {folders["bam_dir"]}{filenames["basename"]}.bam --allow_potentially_misencoded_quality_scores"""
 gatk_haplotype_caller: >-
-  f"""{programms['gatk']} -T HaplotypeCallerSpark --spark-master local[{args["threads"]}]
+  f"""{programms['gatk']} HaplotypeCallerSpark --spark-master local[{args["threads"]}]
   -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna --interval_padding 50 -I {folders["bam_dir"]}{filenames["basename"]}.bam 
   -ploidy 1 -o {folders["vcf_dir"]}{folders["tmp_dir"]}{filenames["basename"]}_ploidy.vcf"""
 rm_tmp_files: >-
