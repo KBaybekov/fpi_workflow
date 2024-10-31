@@ -2,7 +2,7 @@ Mycobacterium_attenuatum:
   - LAUMK41
   - GCF_900566085.1
 Mycobacterium_avium: 
-  - ASM2217558v1
+  - ASM2217558v2
   - GCF_022175585.2
 Mycobacterium_celatum: 
   - ASM210159v1
@@ -17,7 +17,7 @@ Mycobacterium_kansasii:
   - ASM15789v2
   - GCF_000157895.3
 Mycobacterium_lentiflavum: 
-  - PRJEB8430_assembly_1
+  - ASM2237489v2
   - GCF_022374895.2
 Mycobacterium_malmoense: 
   - ASM1964585v1
