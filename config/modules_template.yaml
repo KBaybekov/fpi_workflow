@@ -259,6 +259,7 @@ small_variant_calling_ntm_ref:
       - gatk_haplotype_caller
       - rm_tmp_files
     after_batch:
+      - rm_tmp_dir
  
   result_dir: >-
     fasta

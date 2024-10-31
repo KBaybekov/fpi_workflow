@@ -152,6 +152,8 @@ gatk_haplotype_caller: >-
   -ploidy 1 -O {folders["vcf_dir"]}{filenames["basename"]}_ploidy.vcf"""
 rm_tmp_files: >-
   f"""rm -rf {folders["tmp_dir"]}*"""
+rm_tmp_dir: >-
+  f"""rm -rf {folders["tmp_dir"]}"""
 
 
 #after batch
