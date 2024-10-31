@@ -18,7 +18,8 @@ def get_busco_data(id:str, busco_json:str, cols:list) -> dict:
         d = json.load(json_data) 
     new_row = {'id':id}
     for col in cols:
-        new_row.update({col:d['results'][col]})
+        if col in d.keys():
+            new_row.update({col:d['results'][col]})
     return new_row
 
 def main():
