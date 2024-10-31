@@ -141,7 +141,7 @@ gatk_print_reads: >-
   {programms['gatk']} -T PrintReadsSpark --spark-master local[{args["threads"]}] -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
   -BQSR {folders["tmp_dir"}sorted_dedup_reads.bam_recal_data.table -I {folders["tmp_dir"}sorted_dedup_reads.bam
   -o {folders["bam_dir"}]{filenames["basename"]}.bam --allow_potentially_misencoded_quality_scores
-gatk_build_bam_index: >-
+gatk_haplotype_caller: >-
   {programms['gatk']} -T HaplotypeCallerSpark --spark-master local[{args["threads"]}] -R {args["refs4ids"][filenames["basename"]]} --interval_padding 50
   -I {folders["bam_dir"}]{filenames["basename"]}.bam -ploidy 1 -o {folders["vcf_dir"}{folders["tmp_dir"}{filenames["basename"]}_ploidy.vcf
 rm_tmp_files: >-
