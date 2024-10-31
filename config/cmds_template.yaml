@@ -127,29 +127,29 @@ rm_tmp_files_docker: >-
 bwa: >-
   f"""{programms['meme']} --threads {args["threads"]} -M -R "@RG\\tID:{filenames["basename"]}\\tLB:{filenames["run_id"]}\\tPL:MGI\\tPM:G50\\tSM:{filenames["basename"]}"
   {args["refs4ids"][filenames["basename"]]} {folders["input_dir"}]{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} {folders["input_dir"}]{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
-  > {folders["tmp_dir"}0.sam"""
+  > {folders["tmp_dir"]}0.sam"""
 gatk_sort_sam: >-
-  f"""{programms['gatk']} SortSamSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"}0.sam
-  O={folders["tmp_dir"}0_sorted.bam SORT_ORDER=coordinate"""
+  f"""{programms['gatk']} SortSamSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"]}0.sam
+  O={folders["tmp_dir"]}0_sorted.bam SORT_ORDER=coordinate"""
 gatk_mark_duplicates: >-
-  f"""{programms['gatk']} MarkDuplicatesSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"}0_sorted.bam
-  O={folders["tmp_dir"}sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt"""
+  f"""{programms['gatk']} MarkDuplicatesSpark --spark-master local[{args["threads"]}] I={folders["tmp_dir"]}0_sorted.bam
+  O={folders["tmp_dir"]}sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt"""
 gatk_build_bam_index: >-
-  f"""{programms['gatk']} BuildBamIndex I={folders["tmp_dir"}sorted_dedup.bam"""
+  f"""{programms['gatk']} BuildBamIndex I={folders["tmp_dir"]}sorted_dedup.bam"""
 gatk_base_recalibrator: >-
   f"""{programms['gatk']} -T BaseRecalibratorSpark --spark-master local[{args["threads"]}] --interval_padding 50
   -R {args["refs4ids"][filenames["basename"]]}
-  -rf BadCigar -I {folders["tmp_dir"}sorted_dedup.bam -o {folders["tmp_dir"}sorted_dedup_reads.bam_recal_data.table"""
+  -rf BadCigar -I {folders["tmp_dir"]}sorted_dedup.bam -o {folders["tmp_dir"]}sorted_dedup_reads.bam_recal_data.table"""
 gatk_print_reads: >-
   f"""{programms['gatk']} -T PrintReadsSpark --spark-master local[{args["threads"]}] -R {args["refs4ids"][filenames["basename"]]} -rf BadCigar
-  -BQSR {folders["tmp_dir"}sorted_dedup_reads.bam_recal_data.table -I {folders["tmp_dir"}sorted_dedup_reads.bam
+  -BQSR {folders["tmp_dir"]}sorted_dedup_reads.bam_recal_data.table -I {folders["tmp_dir"]}sorted_dedup_reads.bam
   -o {folders["bam_dir"}]{filenames["basename"]}.bam --allow_potentially_misencoded_quality_scores"""
 gatk_haplotype_caller: >-
   f"""{programms['gatk']} -T HaplotypeCallerSpark --spark-master local[{args["threads"]}]
   -R {args["refs4ids"][filenames["basename"]]} --interval_padding 50 -I {folders["bam_dir"}]{filenames["basename"]}.bam 
-  -ploidy 1 -o {folders["vcf_dir"}{folders["tmp_dir"}{filenames["basename"]}_ploidy.vcf"""
+  -ploidy 1 -o {folders["vcf_dir"}{folders["tmp_dir"]}{filenames["basename"]}_ploidy.vcf"""
 rm_tmp_files: >-
-  f"""rm -rf {folders["tmp_dir"}*"""
+  f"""rm -rf {folders["tmp_dir"]}*"""
 
 
 #after batch
