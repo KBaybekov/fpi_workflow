@@ -147,7 +147,7 @@ gatk_print_reads: >-
 gatk_haplotype_caller: >-
   f"""{programms['gatk']} -T HaplotypeCallerSpark --spark-master local[{args["threads"]}]
   -R {args["refs4ids"]}{filenames["basename"]} --interval_padding 50 -I {folders["bam_dir"]}{filenames["basename"]}.bam 
-  -ploidy 1 -o {folders["vcf_dir"}{folders["tmp_dir"]}{filenames["basename"]}_ploidy.vcf"""
+  -ploidy 1 -o {folders["vcf_dir"]}{folders["tmp_dir"]}{filenames["basename"]}_ploidy.vcf"""
 rm_tmp_files: >-
   f"""rm -rf {folders["tmp_dir"]}*"""
 
