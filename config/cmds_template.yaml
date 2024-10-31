@@ -68,10 +68,10 @@ busco_docker: >-
 quast_docker_0:
   - 120
   - >-
-  f"""docker exec ntm_container /bin/bash -c 'bash quast_unlocker.sh & {programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
-  /input/fasta/{f"{filenames['filename']}.fasta"}
-  -1 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
-  --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && cp -r /quast/ /tmp/ && chmod -R 777 /tmp/quast/'"""
+    f"""docker exec ntm_container /bin/bash -c 'bash quast_unlocker.sh & {programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
+    /input/fasta/{f"{filenames['filename']}.fasta"}
+    -1 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
+    --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && cp -r /quast/ /tmp/ && chmod -R 777 /tmp/quast/'"""
 quast_docker: >-
   f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
   /input/fasta/{f"{filenames['filename']}.fasta"}
