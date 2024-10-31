@@ -135,7 +135,7 @@ gatk_sort_sam: >-
   -O {folders["tmp_dir"]}0_sorted.bam -SO coordinate"""
 gatk_mark_duplicates: >-
   f"""{programms['gatk']} MarkDuplicatesSpark --spark-master local[{args["threads"]}] -I {folders["tmp_dir"]}0_sorted.bam
-  -O {folders["tmp_dir"]}sorted_dedup.bam --metrics_file /tmp/0_metrics.txt"""
+  -O {folders["tmp_dir"]}sorted_dedup.bam --metrics-file {folders["tmp_dir"]}0_metrics.txt"""
 gatk_build_bam_index: >-
   f"""{programms['gatk']} BuildBamIndex -I {folders["tmp_dir"]}sorted_dedup.bam"""
 gatk_base_recalibrator: >-
