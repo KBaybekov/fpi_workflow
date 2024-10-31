@@ -256,8 +256,6 @@ small_variant_calling_ntm_ref:
       - gatk_sort_sam
       - gatk_mark_duplicates
       - gatk_build_bam_index
-      - gatk_base_recalibrator
-      - gatk_print_reads
       - gatk_haplotype_caller
       - rm_tmp_files
     after_batch:
