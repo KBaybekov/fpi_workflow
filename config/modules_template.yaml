@@ -1,4 +1,4 @@
-sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_ntm_ref_docker']
+sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_ntm_ref_docker', 'small_variant_calling']
 
 primary_qc:
   module_before:
