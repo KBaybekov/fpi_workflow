@@ -42,10 +42,11 @@ def main():
               '# indels per 100 kbp', 'Largest alignment']
     # Чтение qc файла
     df = read_qc_file(filepath=qc_data_file, cols=quast_cols)
-    data = get_quast_data(id=id, quast_report=quast_report, cols=quast_cols, species=species)
-    # Добавляем новую строку в DataFrame
-    df = df._append(data, ignore_index=True)
-    df.to_excel(qc_data_file, index=False)
+    if id not in df['id'].values:
+        data = get_quast_data(id=id, quast_report=quast_report, cols=quast_cols, species=species)
+        # Добавляем новую строку в DataFrame
+        df = pd.concat([df, pd.DataFrame([data])], ignore_index=True)
+        df.to_excel(qc_data_file, index=False)
 
 
 if __name__ == "__main__":

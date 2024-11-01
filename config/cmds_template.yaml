@@ -122,35 +122,7 @@ quast_docker_2_r2_only: >-
   --single /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
   --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && cp -r /quast/ /tmp/ && chmod -R 777 /tmp/quast/'"""
 #vcf_calling
-bwa_docker: >-
-  bwa mem -M -R "@RG\\tID:{filenames["basename"]}\\tLB:{filenames["run_id"]}\\tPL:MGI\\tPM:G50\\tSM:{filenames["basename"]}"
-  {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}* /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} /input/{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
-  > /tmp/0.sam
-picard_sort_sam_docker: >-
-  picard-tools SortSam I=/tmp/0.sam O=/tmp/0_sorted.bam SORT_ORDER=coordinate
-picard_mark_duplicates_docker: >-
-  picard-tools MarkDuplicates INPUT=/tmp/0_sorted.bam OUTPUT=/tmp/sorted_dedup.bam METRICS_FILE=/tmp/0_metrics.txt
-picard_build_bam_index_docker: >-
-  picard-tools BuildBamIndex I=/tmp/sorted_dedup.bam
-picard_realign_target_docker: >-
-  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T RealignerTargetCreator -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}* -rf BadCigar
-  -I /tmp/sorted_dedup.bam -o /tmp/sorted_dedup_bam_realignment_targets.list --allow_potentially_misencoded_quality_scores
-picard_indel_realigner_docker: >-
-  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T IndelRealigner -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}* -rf BadCigar
-  --consensusDeterminationModel USE_READS -I /tmp/sorted_dedup.bam -targetIntervals /tmp/sorted_dedup_bam_realignment_targets.list
-  -o /tmp/sorted_dedup_reads.bam --allow_potentially_misencoded_quality_scores
-picard_base_recalibrator_docker: >-
-  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T BaseRecalibrator --interval_padding 50 -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}*
-  -rf BadCigar -I /tmp/sorted_dedup_reads.bam -o /tmp/sorted_dedup_reads.bam_recal_data.table
-picard_pint_reads_docker: >-
-  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T PrintReads -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}* -rf BadCigar
-  -BQSR /tmp/sorted_dedup_reads.bam_recal_data.table -I /tmp/sorted_dedup_reads.bam
-  -o /tmp/sorted_dedup_realigned_reads_recal.bam --allow_potentially_misencoded_quality_scores
-picard_build_bam_index_docker: >-
-  java -Xmx8G -jar {software/GenomeAnalysisTK.jar} -T HaplotypeCaller -R {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]]}* --interval_padding 50
-  -I /tmp/sorted_dedup_realigned_reads_recal.bam -ploidy 1 -o /output/vcf/ploidy.vcf
-rm_tmp_files_docker: >-
-  docker exec ntm_container /bin/bash -c "rm -rf /tmp/*"
+
 #same, no docker
 mkdir_tmp: >-
   f"""mkdir {folders["tmp_dir"]}"""
