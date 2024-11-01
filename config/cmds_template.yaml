@@ -76,30 +76,30 @@ busco_docker: >-
 quast_docker_0:
   - 30
   - >-
-    f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
+    f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
     /input/fasta/{f"{filenames['filename']}.fasta"}
     -1 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
     --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
 quast_chown_0: >-
-  f"""docker exec ntm_container /bin/bash -c 'chmod -R 777 /quast'"""
+  f"""docker exec ntm_container /bin/bash -c 'chmod -R 777 /tmp/'"""
 quast_docker_1:
   - 90
   - >-
-    f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
+    f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
     /input/fasta/{f"{filenames['filename']}.fasta"}
     -1 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
     --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
 quast_chown_1: >-
-  f"""docker exec ntm_container /bin/bash -c 'chmod -R 777 /quast'"""
+  f"""docker exec ntm_container /bin/bash -c 'chmod -R 777 /tmp/'"""
 quast_docker_2: >-
-  f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
+  f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /tmp/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
   /input/fasta/{f"{filenames['filename']}.fasta"}
   -1 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
-  --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && cp -r /quast/ /tmp/ && chmod -R 777 /tmp/quast/'"""
+  --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && chmod -R 777 /tmp/'"""
 parse_busco: >-
   f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['output_dir']}busco.xlsx'
 parse_quast: >-
-  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} {filenames["quast"]} {folders['output_dir']}quast.xlsx'
+  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} /tmp/transposed_report.tsv {folders['output_dir']}quast.xlsx'
 rm_tmp_files_docker: >-
   f"""docker exec ntm_container /bin/bash -c 'rm -rf /tmp/*'"""
 # r2 only
