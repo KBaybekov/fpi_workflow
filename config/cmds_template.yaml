@@ -109,8 +109,14 @@ quast_docker_0_r2_only:
     /input/fasta/{f"{filenames['filename']}.fasta"}
     --single /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
     --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats && cp -r /quast/ /tmp/ && chmod -R 777 /tmp/quast/'"""
-
-quast_docker_r2_only: >-
+quast_docker_1_r2_only:
+  - 90
+  - >-
+    f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
+    /input/fasta/{f"{filenames['filename']}.fasta"}
+    --single /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
+    --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
+quast_docker_2_r2_only: >-
   f"""docker exec ntm_container /bin/bash -c '{programms['quast']} --threads {args['threads']} -o /quast/ -r /ref/bwa/*{args['refs4ids'][filenames["basename"]][0]}*.fna
   /input/fasta/{f"{filenames['filename']}.fasta"}
   --single /input/fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}

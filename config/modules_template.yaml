@@ -205,8 +205,8 @@ qc_assembling_ntm_ref_docker:
      - start_docker_ntm
      #- create_chmod_loop_quast
     sample_level:
-      #- busco_docker
-      #- parse_busco
+      - busco_docker
+      - parse_busco
       - quast_docker_0
       - quast_chown_0
       - quast_docker_1
@@ -256,8 +256,10 @@ qc_assembling_ntm_ref_docker_r2_only:
       - busco_docker
       - parse_busco
       - quast_docker_0_r2_only
-      - quast_chown
-      - quast_docker_r2_only
+      - quast_chown_0
+      - quast_docker_1_r2_only
+      - quast_chown_1
+      - quast_docker_2_r2_only
       - parse_quast
       - rm_tmp_files_docker
     after_batch:
