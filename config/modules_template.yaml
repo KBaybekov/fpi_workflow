@@ -207,12 +207,12 @@ qc_assembling_ntm_ref_docker:
     sample_level:
       - busco_docker
       - parse_busco
-      - quast_docker_0
-      - quast_chown_0
-      - quast_docker_1
-      - quast_chown_1
-      - quast_docker_2
-      - parse_quast
+      #- quast_docker_0
+      #- quast_chown_0
+      #- quast_docker_1
+      #- quast_chown_1
+      #- quast_docker_2
+      #- parse_quast
       - rm_tmp_files_docker
     after_batch:
       - stop_docker_ntm
