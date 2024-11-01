@@ -101,7 +101,7 @@ parse_busco: >-
 parse_quast: >-
   f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} {filenames['quast_report']} {folders['output_dir']}quast.xlsx'
 rm_tmp_files_docker: >-
-  f"""docker exec ntm_container /bin/bash -c 'rm -rf /tmp/*'"""
+  f"""docker exec ntm_container /bin/bash -c 'mv /tmp/* /ref/'"""
 # r2 only
 quast_docker_0_r2_only:
   - 30
