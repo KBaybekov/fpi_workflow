@@ -36,11 +36,12 @@ def main():
               "Missing percentage","Missing BUSCOs"]
     # Чтение qc файла
     df = read_qc_file(filepath=qc_data_file, cols=busco_cols)
-    data = get_busco_data(id=id, busco_json=busco_report, cols=busco_cols)
-    # Добавляем новую строку в DataFrame
-    df._append(data, ignore_index=True)
-    print(data)
-    df.to_excel(qc_data_file, index=False)
+    if id not in df['id']:
+        data = get_busco_data(id=id, busco_json=busco_report, cols=busco_cols)
+        # Добавляем новую строку в DataFrame
+        df._append(data, ignore_index=True)
+        print(df)
+        df.to_excel(qc_data_file, index=False)
 
 
 if __name__ == "__main__":
