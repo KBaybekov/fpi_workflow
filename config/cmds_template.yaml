@@ -99,7 +99,7 @@ quast_docker_2: >-
 parse_busco: >-
   f'python3 {args["project_path"]}/src/busco_parser.py {filenames["basename"]} {filenames["busco"]} {folders['output_dir']}busco.xlsx'
 parse_quast: >-
-  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} /tmp/transposed_report.tsv {folders['output_dir']}quast.xlsx'
+  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} {filenames['quast_report']} {folders['output_dir']}quast.xlsx'
 rm_tmp_files_docker: >-
   f"""docker exec ntm_container /bin/bash -c 'rm -rf /tmp/*'"""
 # r2 only

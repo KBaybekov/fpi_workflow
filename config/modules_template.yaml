@@ -198,8 +198,8 @@ qc_assembling_ntm_ref_docker:
       [f'{filenames['basename']}_1.fq.gz', f'{filenames['basename']}_2.fq.gz']
     busco: >-
       f"{folders['tmp_dir']}busco/*busco.json"
-    quast: >-
-      f"{folders['tmp_dir']}quast/transposed_report.tsv"
+    quast_report: >-
+      f"{folders['tmp_dir']}/transposed_report.tsv"
   commands:
     before_batch:
      - start_docker_ntm
