@@ -38,7 +38,8 @@ def main():
     df = read_qc_file(filepath=qc_data_file, cols=busco_cols)
     data = get_busco_data(id=id, busco_json=busco_report, cols=busco_cols)
     # Добавляем новую строку в DataFrame
-    df = df._append(data, ignore_index=True)
+    df._append(data, ignore_index=True)
+    print(data)
     df.to_excel(qc_data_file, index=False)
 
 
