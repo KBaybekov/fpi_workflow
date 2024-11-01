@@ -199,7 +199,7 @@ qc_assembling_ntm_ref_docker:
     busco: >-
       f"{folders['tmp_dir']}busco/*busco.json"
     quast_report: >-
-      f"{folders['tmp_dir']}/transposed_report.tsv"
+      f"{folders['tmp_dir']}transposed_report.tsv"
   commands:
     before_batch:
      - start_docker_ntm
@@ -213,7 +213,7 @@ qc_assembling_ntm_ref_docker:
       - quast_chown_1
       - quast_docker_2
       - parse_quast
-      #- rm_tmp_files_docker
+      - rm_tmp_files_docker
     after_batch:
       - stop_docker_ntm
  
