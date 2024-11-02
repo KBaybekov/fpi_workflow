@@ -1,4 +1,5 @@
-sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_ntm_ref_docker', 'qc_assembling_ntm_ref_docker_r2_only', 'small_variant_calling_ntm_ref']
+sequence: ['primary_qc', 'myco_qc', 'de_novo_assembling_docker', 'qc_assembling_ntm_ref', 'qc_assembling_ntm_ref_docker',
+  'qc_assembling_ntm_ref_docker_r2_only', 'small_variant_calling_ntm_ref']
 
 primary_qc:
   module_before:
@@ -216,6 +217,45 @@ qc_assembling_ntm_ref_docker:
       - rm_tmp_files_docker
     after_batch:
       - stop_docker_ntm
+ 
+  result_dir: >-
+    No
+
+qc_assembling_ntm_ref:
+  timeout_behavior: next
+  module_before:
+    de_novo_assembling
+  folders:
+    input_dir:
+    output_dir:
+      tmp_dir:
+        tmp
+  
+  source_extensions:
+    ['.fasta']
+
+  filenames:
+    filename: >-
+      os.path.basename(sample).split('.')[0]
+    basename: >-
+      f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
+    run_id: >-
+      filenames['filename'].split('_')[0]
+    pair_of_fqs: >-
+      [f'{filenames['basename']}_1.fq.gz', f'{filenames['basename']}_2.fq.gz']
+    busco: >-
+      f"{folders['tmp_dir']}busco/*busco.json"
+    quast_report: >-
+      f"{folders['tmp_dir']}transposed_report.tsv"
+  commands:
+    before_batch:
+    sample_level:
+      #- busco_docker
+      #- parse_busco
+      - quast
+      - rm_tmp_files
+    after_batch:
+      - rm_tmp_dir
  
   result_dir: >-
     No
