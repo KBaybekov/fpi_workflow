@@ -253,6 +253,7 @@ qc_assembling_ntm_ref:
       #- busco_docker
       #- parse_busco
       - quast
+      - parse_quast
       - rm_tmp_files
     after_batch:
       - rm_tmp_dir
