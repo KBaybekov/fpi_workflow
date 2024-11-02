@@ -105,6 +105,14 @@ quast: >-
     {folders['input_dir']}fasta/{filenames['filename']}.fasta
     -1 {folders['input_dir']}fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 {folders['input_dir']}fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
     --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats"""
+quast_r2: >-
+    f"""{programms['quast']} --threads {args['threads']} -o {folders['tmp_dir']} -r {args['ref_dir']}*{args['refs4ids'][filenames["basename"]][0]}*.fna
+    {folders['input_dir']}fasta/{filenames['filename']}.fasta
+    --single {folders['input_dir']}fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
+    --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats"""
+parse_quast_r2: >-
+  f'python3 {args["project_path"]}/src/quast_parser.py {filenames["basename"]} {args["species4ids"][filenames["basename"]]} {filenames["quast_report"]} {folders["output_dir"]}quast_r2.xlsx'
+
 
 # r2 only
 quast_docker_0_r2_only:
