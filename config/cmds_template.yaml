@@ -104,7 +104,7 @@ quast: >-
     f"""{programms['quast']} --threads {args['threads']} -o {folders['tmp_dir']} -r {args['ref_dir']}*{args['refs4ids'][filenames["basename"]][0]}*.fna
     {folders['input_dir']}fasta/{f"{filenames['filename']}.fasta
     -1 {folders['input_dir']}fq/{filenames['run_id']}/{filenames['pair_of_fqs'][0]} -2 {folders['input_dir']}fq/{filenames['run_id']}/{filenames['pair_of_fqs'][1]}
-    --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats'"""
+    --min-contig 500 --use-all-alignments --k-mer-stats --no-plots --no-read-stats"""
 
 # r2 only
 quast_docker_0_r2_only:
