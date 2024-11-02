@@ -357,7 +357,7 @@ small_variant_calling_ntm_ref:
     input_dir:
     output_dir:
       tmp_dir:
-        tmp
+        tmp_2
       bam_dir:
         bam
       vcf_dir:
