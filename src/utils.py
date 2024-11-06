@@ -90,6 +90,8 @@ def get_samples_in_dir(dir:str, extensions:tuple):
     """
     # Ищем все файлы в директории с указанными расширениями
     files = [os.path.join(dir, s) for s in os.listdir(dir) if s.endswith(extensions)]
+    if not files:
+        raise FileNotFoundError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
 
 
@@ -108,7 +110,7 @@ def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
                     if f.endswith(extensions)]
         files.extend(samples)
     if not files:
-        raise ValueError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
+        raise FileNotFoundError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
 
 
