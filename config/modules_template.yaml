@@ -349,13 +349,14 @@ qc_assembling_ntm_ref_docker_r2_only:
     No
 
 
-
 small_variant_calling_ntm_ref:
   module_before:
     none
   folders:
     input_dir:
     output_dir:
+      log_dir:
+        Logs
       tmp_dir:
         tmp_2
       bam_dir:
