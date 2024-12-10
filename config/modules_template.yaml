@@ -369,7 +369,7 @@ small_variant_calling_ntm_ref:
 
   filenames:
     filename: >-
-      os.path.basename(sample).split('.')[:1]
+      '.'.join(os.path.basename(sample).split('.')[:1])
     basename: >-
       f"{filenames['filename'].split('_')[0]}_{filenames['filename'].split('_')[1]}"
     run_id: >-
