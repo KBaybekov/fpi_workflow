@@ -4,7 +4,7 @@ ref_fasta: >-
   '/path/to/reference.fasta'
 modules: >-
   ['primary_qc', 'de_novo_assembling']
-#ref_dir: >-
-#  /storeData/ztron/rawdata/ref_ntm/
 ref_dir: >-
-  /home/data/REFERENCE_FILES/NCBI_datasets/Mycobacteriaceae/only_ref_fasta/
+  /storeData/ztron/rawdata/ref_ntm/
+#ref_dir: >-
+#  /home/data/REFERENCE_FILES/NCBI_datasets/Mycobacteriaceae/only_ref_fasta/
