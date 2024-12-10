@@ -58,7 +58,7 @@ def parse_cli_args():
         ntm_list = load_yaml(file_path=f'{configs}/gcfs_ntm_list.yaml')
         ref_list = load_yaml(file_path=f'{configs}/reference_genomes_myco.yaml')
         reversed_ref_list = {val[0]:key for key,val in ref_list.items()}
-        refs4ids = {key: ref_list[val] for key,val in ntm_list.items()}
+        refs4ids = {key: ref_list[val] for key,val in ntm_list.items() if val in ref_list.keys()}
         species4ids = {key: reversed_ref_list[val[0]] for key,val in refs4ids.items()}
         setattr(args, 'refs4ids', refs4ids)
         setattr(args, 'species4ids', species4ids)
