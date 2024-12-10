@@ -11,7 +11,7 @@ start_docker_ntm: >-
 create_chmod_loop_quast: >-
   docker exec ntm_container /bin/bash -c 'bash quast_unlocker.sh &'
 mkdir_tmp: >-
-  f"""mkdir {folders["tmp_dir"]}"""
+  f"""mkdir -p {folders["tmp_dir"]}"""
 #batch
 #qc
 kraken2_16S: >-
@@ -141,7 +141,7 @@ quast_docker_2_r2_only: >-
 #same, no docker
 bwa: >-
   f"""{programms['meme']} -t {args["threads"]} -M -R "@RG\\tID:{filenames["basename"]}\\tLB:{filenames["run_id"]}\\tPL:MGI\\tPM:G50\\tSM:{filenames["basename"]}"
-  {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna {folders["input_dir"]}{filenames["run_id"]}/{filenames["pair_of_fqs"][0]} {folders["input_dir"]}{filenames["run_id"]}/{filenames["pair_of_fqs"][1]}
+  {args["ref_dir"]}*{args["refs4ids"][filenames["basename"]][0]}*.fna {folders["input_dir"]}{filenames["pair_of_fqs"][0]} {folders["input_dir"]}{filenames["pair_of_fqs"][1]}
   > {folders["tmp_dir"]}0.sam"""
 gatk_sort_sam: >-
   f"""{programms['gatk']} SortSamSpark --spark-master local[{args["threads"]}] -I {folders["tmp_dir"]}0.sam
