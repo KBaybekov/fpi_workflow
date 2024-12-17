@@ -79,7 +79,7 @@ def update_yaml(file_path: str, new_data: dict):
         yaml.dump(current_data, file, default_flow_style=False)
 
 
-def get_samples_in_dir(dir:str, extensions:tuple):
+def get_samples_in_dir(dir:str, extensions:tuple, empty_ok:bool=False):
     """
     Генерирует список файлов на основе включающих и исключающих образцов.
     Выдаёт ошибку, если итоговый список пустой.
@@ -90,12 +90,12 @@ def get_samples_in_dir(dir:str, extensions:tuple):
     """
     # Ищем все файлы в директории с указанными расширениями
     files = [os.path.join(dir, s) for s in os.listdir(dir) if s.endswith(extensions)]
-    if not files:
+    if not files and not empty_ok:
         raise FileNotFoundError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
 
 
-def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
+def get_samples_in_dir_tree(dir:str, extensions:tuple, empty_ok:bool=False) -> list:
     """
     Генерирует список файлов, проходя по дереву папок, корнем которого является dir.
     Выдаёт ошибку, если итоговый список пустой.
@@ -109,7 +109,7 @@ def get_samples_in_dir_tree(dir:str, extensions:tuple) -> list:
         samples = [os.path.join(root, f) for f in fs 
                     if f.endswith(extensions)]
         files.extend(samples)
-    if not files:
+    if not files and not empty_ok:
         raise FileNotFoundError("Образцы не найдены. Проверьте входные и исключаемые образцы, а также директорию с исходными файлами.")
     return files
 
