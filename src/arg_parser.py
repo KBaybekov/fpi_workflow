@@ -55,7 +55,8 @@ def parse_cli_args():
     # Если мы выравниваем NTM на реф геном, то нам нужно заменить в аргументах default ref на ref нужного вида.
     # Для этого снабжаем пайплайн словарём с указанием id и превалирующего в нём вида
     if any(['ntm_ref' in module for module in args.modules]):
-        ntm_list = load_yaml(file_path=f'{configs}/gcfs_ntm_list.yaml')
+        #ntm_list = load_yaml(file_path=f'{configs}/gcfs_ntm_list.yaml')
+        ntm_list = load_yaml(file_path=f'{configs}/n_farcinica_list.yaml')
         ref_list = load_yaml(file_path=f'{configs}/reference_genomes_myco.yaml')
         reversed_ref_list = {val[0]:key for key,val in ref_list.items()}
         refs4ids = {key: ref_list[val] for key,val in ntm_list.items() if val in ref_list.keys()}
